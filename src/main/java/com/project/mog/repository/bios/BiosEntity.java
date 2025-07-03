@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import com.project.mog.repository.users.UsersEntity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -42,8 +43,8 @@ public class BiosEntity {
 	@Column(length=3,nullable=false)
 	private long weight;
 	
-	@OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usersId", referencedColumnName = "usersId", nullable = false)
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "usersId", referencedColumnName = "usersId", nullable = true)
 	private UsersEntity user;
     
 }

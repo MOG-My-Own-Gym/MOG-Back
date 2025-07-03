@@ -2,6 +2,7 @@
 
 import java.time.LocalDateTime;
 
+import com.project.mog.repository.auth.AuthEntity;
 import com.project.mog.repository.bios.BiosEntity;
 
 import jakarta.persistence.CascadeType;
@@ -62,6 +63,7 @@ public class UsersEntity {
 	
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private BiosEntity bios;
-
+	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	private AuthEntity auth;
 
 }

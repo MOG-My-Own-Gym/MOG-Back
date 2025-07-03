@@ -24,8 +24,9 @@ public class UsersController {
 	private final UsersService usersService;
 	
 	@GetMapping("list")
-	public ResponseEntity<List<UsersEntity>> getAllUsers(){
-		List<UsersEntity> users = usersService.getAllUsers();
+	public ResponseEntity<List<UsersDto>> getAllUsers(){
+		List<UsersDto> users = usersService.getAllUsers();
+		System.out.println("users:"+users);
 		return ResponseEntity.ok(users);
 	}
 	

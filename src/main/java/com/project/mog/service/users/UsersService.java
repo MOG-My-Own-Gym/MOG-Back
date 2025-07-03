@@ -2,6 +2,7 @@ package com.project.mog.service.users;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,8 +22,8 @@ public class UsersService {
 		}
 
 
-		public List<UsersEntity> getAllUsers() {
-			return usersRepository.findAll();
+		public List<UsersDto> getAllUsers() {
+			return usersRepository.findAll().stream().map(UsersDto::toDto).collect(Collectors.toList());
 		}
 
 

@@ -5,8 +5,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 
 import com.project.mog.repository.users.UsersEntity;
 import com.project.mog.repository.users.UsersRepository;
@@ -37,6 +37,14 @@ public class UsersService {
 		public Optional<UsersDto> getUser(Long usersId) {
 			
 			return usersRepository.findById(usersId).map(uEntity->UsersDto.toDto(uEntity));
+		}
+
+
+		public UsersDto deleteUser(Long usersId) {
+			UsersEntity usersEntity =usersRepository.findById(usersId).orElseThrow(()->new IllegalArgumentException(usersId+"가 존재하지 않습니다"));
+			
+			usersRepository.deleteById(usersId);
+			return UsersDto.toDto(usersEntity);
 		}
 		
 		

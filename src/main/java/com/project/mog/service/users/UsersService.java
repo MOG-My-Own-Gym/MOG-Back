@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.project.mog.controller.login.LoginRequest;
+import com.project.mog.controller.login.LoginResponse;
 import com.project.mog.repository.auth.AuthEntity;
 import com.project.mog.repository.auth.AuthRepository;
 import com.project.mog.repository.bios.BiosEntity;
@@ -21,6 +23,7 @@ public class UsersService {
 		private UsersRepository usersRepository;
 		private BiosRepository biosRepository;
 		private AuthRepository authRepository;
+		
 		
 		@Autowired
 		public UsersService(UsersRepository usersRepository, BiosRepository biosRepository,AuthRepository authRepository ) {
@@ -64,7 +67,10 @@ public class UsersService {
 			usersEntity.setEmail(usersDto.getEmail());
 			usersEntity.setProfileImg(usersDto.getProfileImg()!=null?usersDto.getProfileImg():null);
 			usersEntity.setUpdateDate();
+			
+			
 			//아래는 연관관계 업데이트
+			
 			//biosDto 업데이트
 			if(usersDto.getBiosDto()!=null) {
 				biosEntity.setAge(usersDto.getBiosDto().getAge());
@@ -78,11 +84,19 @@ public class UsersService {
 			}
 			
 			
-			System.out.println("usersDto connectTime:"+usersDto.getAuthDto().getConnectTime());
 			//authDto 업데이트
 			authEntity.setPassword(usersDto.getAuthDto().getPassword());
 			return UsersDto.toDto(usersEntity);
 		}
+
+		
+		public UsersDto login(LoginRequest request) {
+			UsersEntity usersEntity = usersRepository.findByEmailAndPassword(request.getEmail(),request.getPassword()).orElseThrow(()-> new IllegalArgumentException("올바르지 않은 아이디/비밀번호입니다"));
+			
+			return UsersDto.toDto(usersEntity);
+			
+		}
+		
 		
 		
 }

@@ -5,25 +5,30 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.mog.repository.users.UsersEntity;
+import com.project.mog.security.jwt.JwtUtil;
 import com.project.mog.service.users.UsersDto;
 import com.project.mog.service.users.UsersService;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/v1/users/")
 @RequiredArgsConstructor
 public class UsersController {
+	private final JwtUtil jwtUtil;
 	private final UsersService usersService;
 	
 	@GetMapping("list")
@@ -42,14 +47,20 @@ public class UsersController {
 		return usersService.getUser(usersId).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
 				
 	}
+	@Transactional
 	@PutMapping("/update/{usersId}")
-	public ResponseEntity<UsersDto> editUser(@PathVariable Long usersId,@RequestBody UsersDto usersDto){
-		UsersDto editUsers = usersService.editUser(usersDto,usersId);
+	public ResponseEntity<UsersDto> editUser(@RequestHeader("Authorization") String authHeader, @PathVariable Long usersId,@RequestBody UsersDto usersDto){
+		String token = authHeader.replace("Bearer ", "");
+		String authEmail = jwtUtil.extractUserEmail(token);
+		UsersDto editUsers = usersService.editUser(usersDto,usersId,authEmail);
 		return ResponseEntity.status(HttpStatus.OK).body(editUsers);
 	}
+	@Transactional
 	@DeleteMapping("/delete/{usersId}")
-	public ResponseEntity<UsersDto> deleteUser(@PathVariable Long usersId){
-		UsersDto deleteUsers = usersService.deleteUser(usersId);
+	public ResponseEntity<UsersDto> deleteUser(@RequestHeader("Authorization") String authHeader, @PathVariable Long usersId){
+		String token = authHeader.replace("Bearer ", "");
+		String authEmail = jwtUtil.extractUserEmail(token);
+		UsersDto deleteUsers = usersService.deleteUser(usersId,authEmail);
 		return ResponseEntity.status(HttpStatus.OK).body(deleteUsers);
 	}
 	

@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.project.mog.security.jwt.JwtUtil;
 import com.project.mog.service.users.UsersDto;
 import com.project.mog.service.users.UsersService;
-import com.project.mog.util.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
 

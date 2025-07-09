@@ -37,3 +37,6 @@ spring:
       properties:
         hibernate:
           format_sql: true
+
+jwttoken:
+  secret-key: Nf/vIRqt0/bKThqJ6tOy2M9tqJX+rJxGG9HrZgsBrT4=

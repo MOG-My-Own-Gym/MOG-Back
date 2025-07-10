@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
+import com.project.mog.annotation.UserAuthorizationCheck;
 import com.project.mog.controller.login.LoginRequest;
 import com.project.mog.controller.login.LoginResponse;
 import com.project.mog.repository.auth.AuthEntity;
@@ -53,7 +54,7 @@ public class UsersService {
 			return usersRepository.findById(usersId).map(uEntity->UsersDto.toDto(uEntity));
 		}
 
-
+		@UserAuthorizationCheck
 		public UsersDto deleteUser(Long usersId, String authEmail) {
 			UsersEntity currentUser = usersRepository.findByEmail(authEmail);
 			UsersEntity targetUser = usersRepository.findById(usersId).orElseThrow(()->new RuntimeException("삭제할 사용자를 찾을 수 없습니다"));
@@ -65,14 +66,14 @@ public class UsersService {
 			return UsersDto.toDto(targetUser);
 		}
 
-
+		@UserAuthorizationCheck
 		public UsersDto editUser(UsersDto usersDto, Long usersId, String authEmail) {
-			UsersEntity currentUser = usersRepository.findByEmail(authEmail);
-			UsersEntity targetUser = usersRepository.findById(usersId).orElseThrow(()->new RuntimeException("수정할 사용자를 찾을 수 없습니다"));
-			
-			//권한을 가진 유저의 수정 요청인지 확인
-			if(currentUser.getUsersId()!=targetUser.getUsersId()) throw new AccessDeniedException("자기 자신만 수정 가능합니다");
-			
+//			UsersEntity currentUser = usersRepository.findByEmail(authEmail);
+//			UsersEntity targetUser = usersRepository.findById(usersId).orElseThrow(()->new RuntimeException("수정할 사용자를 찾을 수 없습니다"));
+//			
+//			//권한을 가진 유저의 수정 요청인지 확인
+//			if(currentUser.getUsersId()!=targetUser.getUsersId()) throw new AccessDeniedException("자기 자신만 수정 가능합니다");
+//			
 			
 			UsersEntity usersEntity =usersRepository.findById(usersId).orElseThrow(()->new IllegalArgumentException(usersId+"가 존재하지 않습니다"));
 			BiosEntity biosEntity = biosRepository.findByUser(usersEntity);
@@ -103,7 +104,6 @@ public class UsersService {
 			return UsersDto.toDto(usersEntity);
 		}
 
-		
 		public UsersDto login(LoginRequest request) {
 			UsersEntity usersEntity = usersRepository.findByEmailAndPassword(request.getEmail(),request.getPassword()).orElseThrow(()-> new IllegalArgumentException("올바르지 않은 아이디/비밀번호입니다"));
 			

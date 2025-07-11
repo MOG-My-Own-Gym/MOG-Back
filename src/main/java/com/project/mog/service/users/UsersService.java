@@ -79,6 +79,7 @@ public class UsersService {
 			BiosEntity biosEntity = biosRepository.findByUser(usersEntity);
 			AuthEntity authEntity = authRepository.findByUser(usersEntity);
 			usersEntity.setUsersName(usersDto.getUsersName());
+			usersEntity.setNickName(usersDto.getNickName());
 			usersEntity.setProfileImg(usersDto.getProfileImg()!=null?usersDto.getProfileImg():null);
 			usersEntity.setUpdateDate();
 			

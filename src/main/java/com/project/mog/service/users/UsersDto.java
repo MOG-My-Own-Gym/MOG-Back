@@ -30,6 +30,8 @@ public class UsersDto {
 	private AuthDto authDto;
 	@Schema(description = "usersName",example="테스트유저")
 	private String usersName;
+	@Schema(description = "nickName",example="테스트닉네임")
+	private String nickName;
 	@Schema(description = "email",example="test@test.com")
 	private String email;
 	@Schema(description = "profileImg",example="profileImg.png")
@@ -41,6 +43,7 @@ public class UsersDto {
 		UsersEntity uEntity = UsersEntity.builder()
 					.usersId(usersId)
 					.usersName(usersName)
+					.nickName(nickName)
 					.email(email)
 					.profileImg(profileImg)
 					.regDate(regDate)
@@ -66,6 +69,7 @@ public class UsersDto {
 		return UsersDto.builder()
 				.usersId(uEntity.getUsersId())
 				.usersName(uEntity.getUsersName())
+				.nickName(uEntity.getNickName())
 				.email(uEntity.getEmail())
 				.profileImg(uEntity.getProfileImg())
 				.regDate(uEntity.getRegDate())

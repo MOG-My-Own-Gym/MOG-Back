@@ -40,6 +40,9 @@ public class UsersEntity {
 	@Column(length = 10,nullable = false)
 	private String usersName;
 	
+	@Column(length= 100, nullable = false)
+	private String nickName;
+	
 	@Column(length = 100,nullable = false)
 	private String email;
 	

@@ -9,6 +9,7 @@ import com.project.mog.repository.users.UsersEntity;
 import com.project.mog.service.auth.AuthDto;
 import com.project.mog.service.bios.BiosDto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,12 +23,16 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class UsersDto {
+	@Schema(description = "usersId",example="1")
 	private long usersId;
 	@Nullable
 	private BiosDto biosDto;
 	private AuthDto authDto;
+	@Schema(description = "usersName",example="테스트유저")
 	private String usersName;
+	@Schema(description = "email",example="test@test.com")
 	private String email;
+	@Schema(description = "profileImg",example="profileImg.png")
 	private String profileImg;
 	private LocalDateTime regDate;
 	private LocalDateTime updateDate;

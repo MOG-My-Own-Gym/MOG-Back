@@ -16,18 +16,25 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.mog.controller.login.LoginRequest;
+import com.project.mog.controller.login.LoginResponse;
+import com.project.mog.docs.UsersControllerDocs;
 import com.project.mog.repository.users.UsersEntity;
 import com.project.mog.security.jwt.JwtUtil;
 import com.project.mog.service.users.UsersDto;
 import com.project.mog.service.users.UsersService;
 
+
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+
+
 
 @RestController
 @RequestMapping("/api/v1/users/")
 @RequiredArgsConstructor
-public class UsersController {
+public class UsersController implements UsersControllerDocs{
 	private final JwtUtil jwtUtil;
 	private final UsersService usersService;
 	
@@ -62,6 +69,27 @@ public class UsersController {
 		String authEmail = jwtUtil.extractUserEmail(token);
 		UsersDto deleteUsers = usersService.deleteUser(usersId,authEmail);
 		return ResponseEntity.status(HttpStatus.OK).body(deleteUsers);
+	}
+	
+	
+	@PostMapping("login")
+	public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request){
+		UsersDto usersDto = usersService.login(request);
+		
+		long usersId = usersDto.getUsersId();
+		String email = usersDto.getEmail();
+		String accessToken = jwtUtil.generateAccessToken(email);
+		String refreshToken = jwtUtil.generateRefreshToken(email);
+		
+		
+		LoginResponse loginResponse = LoginResponse.builder()
+											.usersId(usersId)
+											.email(email)
+											.accessToken(accessToken)
+											.refreshToken(refreshToken)
+											.build();
+		
+		return ResponseEntity.status(HttpStatus.OK).body(loginResponse);
 	}
 	
 }

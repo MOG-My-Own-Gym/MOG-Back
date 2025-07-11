@@ -6,6 +6,7 @@ import com.project.mog.repository.bios.BiosEntity;
 import com.project.mog.repository.users.UsersEntity;
 import com.project.mog.service.users.UsersDto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,10 +20,15 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class BiosDto {
+	@Schema(description = "bioId",example="1")
 	private long bioId;
+	@Schema(description = "age",example="25")
 	private long age;
+	@Schema(description = "gender",example="false")
 	private boolean gender;
+	@Schema(description = "height",example="170")
 	private long height;
+	@Schema(description = "weight",example="70")
 	private long weight;
 	
 	public BiosEntity toEntity() {

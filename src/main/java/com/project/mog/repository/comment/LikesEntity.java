@@ -1,5 +1,7 @@
 package com.project.mog.repository.comment;
 
+import org.aspectj.apache.bcel.classfile.Module.Uses;
+
 import com.project.mog.repository.users.UsersEntity;
 
 import jakarta.persistence.Column;
@@ -10,12 +12,18 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 @Entity
-@Table(name = "likes")
 @Getter
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "likes",
+	uniqueConstraints = {@UniqueConstraint(name="likes_uk",
+	columnNames = {"user_id","post_id"})
+	})
 public class LikesEntity {
 	
 	@Id
@@ -34,7 +42,9 @@ public class LikesEntity {
 	@JoinColumn(name = "user_id",nullable = false)	
 	private UsersEntity user;
 	
-	private int likesStatus=0; //사용자당 한번만 클릭할수있도록
-	
+	 public LikesEntity(Uses users) {
+	        this.user = user;
+	        //this.post = post; // post 작성후 수정
+	 }
 	
 }

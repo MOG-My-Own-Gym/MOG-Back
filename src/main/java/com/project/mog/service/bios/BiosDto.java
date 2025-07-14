@@ -14,7 +14,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -40,7 +39,6 @@ public class BiosDto {
 				.height(height)
 				.weight(weight)
 				.build();
-				
 	}
 	public static BiosDto toDto(BiosEntity bEntity) {
 		if (bEntity==null) return null;

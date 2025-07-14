@@ -22,6 +22,7 @@ import com.project.mog.docs.UsersControllerDocs;
 import com.project.mog.repository.users.UsersEntity;
 import com.project.mog.security.jwt.JwtUtil;
 import com.project.mog.service.users.UsersDto;
+import com.project.mog.service.users.UsersInfoDto;
 import com.project.mog.service.users.UsersService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -55,10 +56,10 @@ public class UsersController implements UsersControllerDocs{
 	}
 	@Transactional
 	@PutMapping("/update/{usersId}")
-	public ResponseEntity<UsersDto> editUser(@RequestHeader("Authorization") String authHeader, @PathVariable Long usersId,@RequestBody UsersDto usersDto){
+	public ResponseEntity<UsersInfoDto> editUser(@RequestHeader("Authorization") String authHeader, @PathVariable Long usersId,@RequestBody UsersInfoDto usersInfoDto){
 		String token = authHeader.replace("Bearer ", "");
 		String authEmail = jwtUtil.extractUserEmail(token);
-		UsersDto editUsers = usersService.editUser(usersDto,usersId,authEmail);
+		UsersInfoDto editUsers = usersService.editUser(usersInfoDto,usersId,authEmail);
 		return ResponseEntity.status(HttpStatus.OK).body(editUsers);
 	}
 	@Transactional

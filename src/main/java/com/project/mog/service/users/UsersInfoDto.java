@@ -1,0 +1,56 @@
+package com.project.mog.service.users;
+
+import java.time.LocalDateTime;
+
+import com.project.mog.repository.bios.BiosEntity;
+import com.project.mog.repository.users.UsersEntity;
+import com.project.mog.service.auth.AuthDto;
+import com.project.mog.service.bios.BiosDto;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.annotation.Nullable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class UsersInfoDto {
+	@Schema(description = "usersId",example="1")
+	private long usersId;
+	@Nullable
+	private BiosDto biosDto;
+	@Schema(description = "usersName",example="테스트유저")
+	private String usersName;
+	@Schema(description = "nickName",example="테스트닉네임")
+	private String nickName;
+	@Schema(description = "email",example="test@test.com")
+	private String email;
+	@Schema(description = "profileImg",example="profileImg.png")
+	private String profileImg;
+	private LocalDateTime updateDate;
+	
+	
+	public void applyTo(UsersEntity user, BiosEntity bios) {
+		user.setUsersName(usersName);
+		user.setNickName(nickName);
+		user.setProfileImg(profileImg);
+		user.setUpdateDate(LocalDateTime.now());
+		
+		if(biosDto!=null) {
+			bios.setAge(biosDto.toEntity().getAge());
+			bios.setGender(biosDto.toEntity().isGender());
+			bios.setHeight(biosDto.toEntity().getHeight());
+			bios.setWeight(biosDto.toEntity().getWeight());
+			user.setBios(bios);	
+		}
+		else {
+			user.setBios(null);
+		}
+	}
+}

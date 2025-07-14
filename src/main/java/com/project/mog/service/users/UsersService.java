@@ -19,6 +19,7 @@ import com.project.mog.repository.bios.BiosEntity;
 import com.project.mog.repository.bios.BiosRepository;
 import com.project.mog.repository.users.UsersEntity;
 import com.project.mog.repository.users.UsersRepository;
+import com.project.mog.service.bios.BiosDto;
 
 @Service
 public class UsersService {
@@ -67,7 +68,7 @@ public class UsersService {
 		}
 
 		@UserAuthorizationCheck
-		public UsersDto editUser(UsersDto usersDto, Long usersId, String authEmail) {
+		public UsersInfoDto editUser(UsersInfoDto usersInfoDto, Long usersId, String authEmail) {
 //			UsersEntity currentUser = usersRepository.findByEmail(authEmail);
 //			UsersEntity targetUser = usersRepository.findById(usersId).orElseThrow(()->new RuntimeException("수정할 사용자를 찾을 수 없습니다"));
 //			
@@ -77,32 +78,18 @@ public class UsersService {
 			
 			UsersEntity usersEntity =usersRepository.findById(usersId).orElseThrow(()->new IllegalArgumentException(usersId+"가 존재하지 않습니다"));
 			BiosEntity biosEntity = biosRepository.findByUser(usersEntity);
-			AuthEntity authEntity = authRepository.findByUser(usersEntity);
-			usersEntity.setUsersName(usersDto.getUsersName());
-			usersEntity.setNickName(usersDto.getNickName());
-			usersEntity.setProfileImg(usersDto.getProfileImg()!=null?usersDto.getProfileImg():null);
-			usersEntity.setUpdateDate();
 			
+			usersInfoDto.applyTo(usersEntity, biosEntity);
 			
-			//아래는 연관관계 업데이트
-			
-			//biosDto 업데이트
-			if(usersDto.getBiosDto()!=null) {
-				biosEntity.setAge(usersDto.getBiosDto().getAge());
-				biosEntity.setGender(usersDto.getBiosDto().isGender());
-				biosEntity.setHeight(usersDto.getBiosDto().getHeight());
-				biosEntity.setWeight(usersDto.getBiosDto().getWeight());
-				biosEntity.setUser(usersEntity);
-			}
-			else {
-				usersEntity.setBios(null);
-			}
-			
-			
-			//authDto 업데이트
-			authEntity.setPassword(usersDto.getAuthDto().getPassword());
-			
-			return UsersDto.toDto(usersEntity);
+			return UsersInfoDto.builder()
+					.usersId(usersEntity.getUsersId())
+					.email(usersEntity.getEmail())
+					.usersName(usersEntity.getUsersName())
+					.profileImg(usersEntity.getProfileImg())
+					.nickName(usersEntity.getNickName())
+					.updateDate(usersEntity.getUpdateDate())
+					.biosDto(BiosDto.toDto(usersEntity.getBios()))
+					.build();
 		}
 
 		public UsersDto login(LoginRequest request) {

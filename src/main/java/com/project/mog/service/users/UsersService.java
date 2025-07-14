@@ -37,8 +37,9 @@ public class UsersService {
 		}
 
 
-		public List<UsersDto> getAllUsers() {
-			return usersRepository.findAll().stream().map(UsersDto::toDto).collect(Collectors.toList());
+		public List<UsersInfoDto> getAllUsers() {
+			
+			return usersRepository.findAll().stream().map(UsersInfoDto::toDto).collect(Collectors.toList());
 		}
 
 
@@ -46,17 +47,16 @@ public class UsersService {
 			UsersEntity isDuplicated = usersRepository.findByEmail(usersDto.getEmail());
 			if(isDuplicated!=null) throw new IllegalArgumentException("중복된 아이디입니다");
 			UsersEntity uEntity = usersRepository.save(usersDto.toEntity());
-			
 			return UsersDto.toDto(uEntity);
 		}
 
 
-		public Optional<UsersDto> getUser(Long usersId) {
-			return usersRepository.findById(usersId).map(uEntity->UsersDto.toDto(uEntity));
+		public Optional<UsersInfoDto> getUser(Long usersId) {
+			return usersRepository.findById(usersId).map(uEntity->UsersInfoDto.toDto(uEntity));
 		}
 
 		@UserAuthorizationCheck
-		public UsersDto deleteUser(Long usersId, String authEmail) {
+		public UsersInfoDto deleteUser(Long usersId, String authEmail) {
 			UsersEntity currentUser = usersRepository.findByEmail(authEmail);
 			UsersEntity targetUser = usersRepository.findById(usersId).orElseThrow(()->new RuntimeException("삭제할 사용자를 찾을 수 없습니다"));
 			
@@ -64,7 +64,7 @@ public class UsersService {
 			if(currentUser.getUsersId()!=targetUser.getUsersId()) throw new AccessDeniedException("자기 자신만 삭제 가능합니다");
 			
 			usersRepository.deleteById(usersId);
-			return UsersDto.toDto(targetUser);
+			return UsersInfoDto.toDto(targetUser);
 		}
 
 		@UserAuthorizationCheck
@@ -79,17 +79,7 @@ public class UsersService {
 			UsersEntity usersEntity =usersRepository.findById(usersId).orElseThrow(()->new IllegalArgumentException(usersId+"가 존재하지 않습니다"));
 			BiosEntity biosEntity = biosRepository.findByUser(usersEntity);
 			
-			usersInfoDto.applyTo(usersEntity, biosEntity);
-			
-			return UsersInfoDto.builder()
-					.usersId(usersEntity.getUsersId())
-					.email(usersEntity.getEmail())
-					.usersName(usersEntity.getUsersName())
-					.profileImg(usersEntity.getProfileImg())
-					.nickName(usersEntity.getNickName())
-					.updateDate(usersEntity.getUpdateDate())
-					.biosDto(BiosDto.toDto(usersEntity.getBios()))
-					.build();
+			return usersInfoDto.applyTo(usersEntity, biosEntity);
 		}
 
 		public UsersDto login(LoginRequest request) {

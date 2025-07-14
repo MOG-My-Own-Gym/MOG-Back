@@ -36,7 +36,7 @@ public class UsersInfoDto {
 	private LocalDateTime updateDate;
 	
 	
-	public void applyTo(UsersEntity user, BiosEntity bios) {
+	public UsersInfoDto applyTo(UsersEntity user, BiosEntity bios) {
 		user.setUsersName(usersName);
 		user.setNickName(nickName);
 		user.setProfileImg(profileImg);
@@ -52,5 +52,26 @@ public class UsersInfoDto {
 		else {
 			user.setBios(null);
 		}
+		
+		return UsersInfoDto.builder()
+				.usersId(user.getUsersId())
+				.email(user.getEmail())
+				.usersName(user.getUsersName())
+				.profileImg(user.getProfileImg())
+				.nickName(user.getNickName())
+				.updateDate(user.getUpdateDate())
+				.biosDto(BiosDto.toDto(user.getBios()))
+				.build();
+	}
+	
+	public static UsersInfoDto toDto(UsersEntity user) {
+		return UsersInfoDto.builder().usersId(user.getUsersId())
+				.email(user.getEmail())
+				.usersName(user.getUsersName())
+				.profileImg(user.getProfileImg())
+				.nickName(user.getNickName())
+				.updateDate(user.getUpdateDate())
+				.biosDto(BiosDto.toDto(user.getBios()))
+				.build();
 	}
 }

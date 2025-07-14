@@ -39,8 +39,8 @@ public class UsersController implements UsersControllerDocs{
 	private final UsersService usersService;
 	
 	@GetMapping("list")
-	public ResponseEntity<List<UsersDto>> getAllUsers(){
-		List<UsersDto> users = usersService.getAllUsers();
+	public ResponseEntity<List<UsersInfoDto>> getAllUsers(){
+		List<UsersInfoDto> users = usersService.getAllUsers();
 		return ResponseEntity.ok(users);
 	}
 	
@@ -50,7 +50,7 @@ public class UsersController implements UsersControllerDocs{
 		return ResponseEntity.status(HttpStatus.CREATED).body(createUsers);
 	}
 	@GetMapping("/{usersId}")
-	public ResponseEntity<UsersDto> getUser(@PathVariable Long usersId){
+	public ResponseEntity<UsersInfoDto> getUser(@PathVariable Long usersId){
 		return usersService.getUser(usersId).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
 				
 	}
@@ -64,10 +64,10 @@ public class UsersController implements UsersControllerDocs{
 	}
 	@Transactional
 	@DeleteMapping("/delete/{usersId}")
-	public ResponseEntity<UsersDto> deleteUser(@RequestHeader("Authorization") String authHeader, @PathVariable Long usersId){
+	public ResponseEntity<UsersInfoDto> deleteUser(@RequestHeader("Authorization") String authHeader, @PathVariable Long usersId){
 		String token = authHeader.replace("Bearer ", "");
 		String authEmail = jwtUtil.extractUserEmail(token);
-		UsersDto deleteUsers = usersService.deleteUser(usersId,authEmail);
+		UsersInfoDto deleteUsers = usersService.deleteUser(usersId,authEmail);
 		return ResponseEntity.status(HttpStatus.OK).body(deleteUsers);
 	}
 	

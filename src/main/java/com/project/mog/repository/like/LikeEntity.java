@@ -13,15 +13,15 @@ public class LikeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "likes_id")
+    @Column(name = "likesid")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName="authId", nullable = false)
+    @JoinColumn(name = "userid", referencedColumnName="authId", nullable = false)
     private AuthEntity user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id", nullable = false)
+    @JoinColumn(name = "postid", nullable = false)
     private Post post;
 
     public LikeEntity(AuthEntity user, Post post) {

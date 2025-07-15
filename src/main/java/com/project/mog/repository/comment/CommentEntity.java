@@ -17,22 +17,22 @@ public class CommentEntity { // 클래스 이름 변경
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "comment_id")
+    @Column(name = "commentid")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id", nullable = false)
+    @JoinColumn(name = "postid", nullable = false)
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName="authId", nullable = false)
+    @JoinColumn(name = "userid", referencedColumnName="authId", nullable = false)
     private AuthEntity user;
 
-    @Column(name = "comment_content", nullable = false, length = 300)
+    @Column(name = "commentcontent", nullable = false, length = 300)
     private String content;
 
     @CreatedDate
-    @Column(name = "comment_up_date", updatable = false)
+    @Column(name = "commentupdate", updatable = false)
     private LocalDateTime createdAt;
 
     // 반환 타입을 CommentEntity로 변경

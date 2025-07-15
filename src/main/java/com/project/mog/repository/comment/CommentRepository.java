@@ -1,10 +1,10 @@
-/*package com.project.mog.repository.comment;
+package com.project.mog.repository.comment;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
-import org.springframework.stereotype.Repository;
 
-@Repository
-public class CommentRepository extends JpaRepository<CommentEntity, Long>  {
-	List<CommentEntity> findAllByPost_Id(Long postId);
-}*/
+public interface CommentRepository extends JpaRepository<CommentEntity, Long> { 
+    
+    List<CommentEntity> findByPostIdOrderByCreatedAtDesc(Long postId); 
+}

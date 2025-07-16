@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,7 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.mog.security.jwt.JwtUtil;
 import com.project.mog.service.routine.RoutineDto;
+import com.project.mog.service.routine.RoutineEndTotalDto;
 import com.project.mog.service.routine.RoutineService;
+import com.project.mog.service.routine.SaveRoutineDto;
 import com.project.mog.service.users.UsersDto;
 
 import lombok.RequiredArgsConstructor;
@@ -27,6 +30,7 @@ public class RoutineController {
 	private final JwtUtil jwtUtil;
 	private final RoutineService routineService;
 	
+	//루틴 관련 api
 	@GetMapping("list")
 	public ResponseEntity<List<RoutineDto>> getAllRoutines(@RequestHeader("Authorization") String authHeader){
 		String token = authHeader.replace("Bearer ", "");
@@ -35,7 +39,7 @@ public class RoutineController {
 		return ResponseEntity.ok(routines);
 	}
 	
-	@GetMapping("details/{setId}")
+	@GetMapping("{setId}")
 	public ResponseEntity<RoutineDto> getRoutineDetail(@RequestHeader("Authorization") String authHeader, @PathVariable long setId){
 		String token = authHeader.replace("Bearer ", "");
 		String authEmail = jwtUtil.extractUserEmail(token);
@@ -52,4 +56,26 @@ public class RoutineController {
 		RoutineDto routine = routineService.createRoutine(authEmail,routineDto);
 		return ResponseEntity.status(HttpStatus.CREATED).body(routine);
 	}
+	
+	@PostMapping("{setId}/save")
+	public ResponseEntity<SaveRoutineDto> createSaveRoutine(@RequestBody SaveRoutineDto saveRoutineDto, @PathVariable Long setId){
+		SaveRoutineDto saveRoutine = routineService.createSaveRoutine(saveRoutineDto,setId);
+		return ResponseEntity.status(HttpStatus.CREATED).body(saveRoutine);
+	}
+	
+	@DeleteMapping("save/{srId}")
+	public ResponseEntity<SaveRoutineDto> deleteSaveRoutine(@PathVariable Long srId){
+	
+		SaveRoutineDto saveRoutine = routineService.deleteSaveRoutine(srId);
+		return ResponseEntity.status(HttpStatus.OK).body(saveRoutine);
+	}
+	
+	
+	//루틴 결과 관련 api
+	@PostMapping("{setId}/result")
+	public ResponseEntity<RoutineEndTotalDto> createRoutineEndTotal(@RequestBody RoutineEndTotalDto routineEndTotalDto,@PathVariable Long setId){
+		RoutineEndTotalDto routineEndTotal = routineService.createRoutineEndTotal(routineEndTotalDto,setId);
+		return ResponseEntity.status(HttpStatus.CREATED).body(routineEndTotal);
+	}
+	
 }

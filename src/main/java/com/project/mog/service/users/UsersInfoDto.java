@@ -33,6 +33,7 @@ public class UsersInfoDto {
 	private String email;
 	@Schema(description = "profileImg",example="profileImg.png")
 	private String profileImg;
+	private LocalDateTime regDate;
 	private LocalDateTime updateDate;
 	
 	
@@ -59,6 +60,7 @@ public class UsersInfoDto {
 				.usersName(user.getUsersName())
 				.profileImg(user.getProfileImg())
 				.nickName(user.getNickName())
+				.regDate(user.getRegDate())
 				.updateDate(user.getUpdateDate())
 				.biosDto(BiosDto.toDto(user.getBios()))
 				.build();
@@ -70,6 +72,7 @@ public class UsersInfoDto {
 				.usersName(user.getUsersName())
 				.profileImg(user.getProfileImg())
 				.nickName(user.getNickName())
+				.regDate(user.getRegDate())
 				.updateDate(user.getUpdateDate())
 				.biosDto(BiosDto.toDto(user.getBios()))
 				.build();

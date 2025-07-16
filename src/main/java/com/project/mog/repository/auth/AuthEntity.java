@@ -38,7 +38,7 @@ public class AuthEntity {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator ="SEQ_AUTH_GENERATOR")
 	private long authId;
 	
-	@Column(length=20,nullable=false)
+	@Column(length=100,nullable=false)
 	private String password;
 	
 	@Column(nullable=false)

@@ -30,13 +30,13 @@ spring:
   #Spring Data JPA 설정
     jpa:
       hibernate:
-        ddl-auto: update
+        ddl-auto: create
         naming:
           physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
       show-sql: true
       properties:
         hibernate:
           format_sql: true
-
+      
 jwttoken:
   secret-key: Nf/vIRqt0/bKThqJ6tOy2M9tqJX+rJxGG9HrZgsBrT4=

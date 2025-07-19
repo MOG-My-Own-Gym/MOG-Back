@@ -11,7 +11,8 @@ UNZIP_DIR="/app/wallet"
 
 if [ -f "$SECRET_ZIP" ]; then
   echo "Unzipping wallet.zip from secret files..."
-  ls -lh /etc/secrets/wallet.zip
+  ls -l /etc/secrets/wallet.zip
+  ls -l /etc/secrets/..data/wallet.zip
   file /etc/secrets/wallet.zip
   unzip -t /etc/secrets/wallet.zip
   unzip -o "$SECRET_ZIP" -d "$UNZIP_DIR"

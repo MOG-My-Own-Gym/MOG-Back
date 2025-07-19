@@ -1,6 +1,6 @@
 #!/bin/sh
 
-SECRET_ZIP="/run/secrets/wallet.zip"
+SECRET_ZIP="/etc/secrets/wallet.zip"
 UNZIP_DIR="/app/wallet"
 
 if [ -f "$SECRET_ZIP" ]; then

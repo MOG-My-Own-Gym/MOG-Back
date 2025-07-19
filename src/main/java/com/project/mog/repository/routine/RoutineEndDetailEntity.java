@@ -2,6 +2,7 @@ package com.project.mog.repository.routine;
 
 import java.time.LocalDateTime;
 
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -45,8 +46,9 @@ public class RoutineEndDetailEntity {
 	@Column(length=19)
 	private long weight;
 	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "retId", nullable = false)
 	private RoutineEndTotalEntity routineEndTotal;
-	
+
 }

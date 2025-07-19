@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+
 import com.project.mog.repository.routine.RoutineEndDetailEntity;
 import com.project.mog.repository.routine.RoutineEndTotalEntity;
 import com.project.mog.repository.routine.RoutineEntity;
@@ -23,6 +24,7 @@ import lombok.Setter;
 @Builder
 public class RoutineEndTotalDto {
 	private long retId;
+
 	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSS")
 	private LocalDateTime tStart;
 	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSS")
@@ -54,3 +56,4 @@ public class RoutineEndTotalDto {
 	
 	}
 }
+

@@ -33,6 +33,7 @@ public class UsersInfoDto {
 	private String email;
 	@Schema(description = "profileImg",example="profileImg.png")
 	private String profileImg;
+
 	private LocalDateTime regDate;
 	private LocalDateTime updateDate;
 	

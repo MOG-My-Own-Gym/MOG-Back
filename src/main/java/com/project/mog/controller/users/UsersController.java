@@ -96,5 +96,4 @@ public class UsersController implements UsersControllerDocs{
 		return ResponseEntity.status(HttpStatus.OK).body(loginResponse);
 	}
 	
-	
 }

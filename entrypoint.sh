@@ -3,7 +3,7 @@
 echo "=== Listing root directory / ==="
 ls -al /
 
-echo "=== Listing /run/secrets directory ==="
+echo "=== Listing /etc/secrets directory ==="
 ls -al /etc/secrets
 
 SECRET_ZIP="/etc/secrets/wallet.zip"
@@ -11,7 +11,9 @@ UNZIP_DIR="/app/wallet"
 
 if [ -f "$SECRET_ZIP" ]; then
   echo "Unzipping wallet.zip from secret files..."
-  mkdir -p "$UNZIP_DIR"
+  ls -lh /etc/secrets/wallet.zip
+  file /etc/secrets/wallet.zip
+  unzip -t /etc/secrets/wallet.zip
   unzip -o "$SECRET_ZIP" -d "$UNZIP_DIR"
 else
   echo "Secret wallet.zip not found, skipping unzip."

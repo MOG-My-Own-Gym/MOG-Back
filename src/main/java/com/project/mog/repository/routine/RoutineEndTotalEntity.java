@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.project.mog.repository.users.UsersEntity;
 
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -36,19 +38,21 @@ public class RoutineEndTotalEntity {
 	@SequenceGenerator(name = "SEQ_RET_GENERATOR",sequenceName = "SEQ_RET",allocationSize = 1,initialValue = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator ="SEQ_RET_GENERATOR" )	
 	private long retId;
-	
-	private LocalDateTime t_start;
-	private LocalDateTime t_end;
+
+	private LocalDateTime tStart;
+	private LocalDateTime tEnd;
+
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "setId", referencedColumnName = "setId", nullable = true)
 	private RoutineEntity routine;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="redId",referencedColumnName="redId",nullable=false)
-	private RoutineEndDetailEntity routineEndDetail;
+
+	@OneToMany(mappedBy = "routineEndTotal", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<RoutineEndDetailEntity> routineEndDetail;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY)
+
 	@JoinColumn(name="rrId",referencedColumnName="rrId",nullable=false)
 	private RoutineResultEntity routineResult;
 }

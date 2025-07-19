@@ -2,6 +2,9 @@ package com.project.mog.service.routine;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import com.project.mog.repository.routine.RoutineEndDetailEntity;
 import com.project.mog.repository.routine.RoutineEndTotalEntity;
@@ -21,21 +24,36 @@ import lombok.Setter;
 @Builder
 public class RoutineEndTotalDto {
 	private long retId;
-	private LocalDateTime t_start;
-	private LocalDateTime t_end;
-	private RoutineEntity routine;
-	private RoutineEndDetailEntity routineEndDetail;
-	private RoutineResultEntity routineResult;
+
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSS")
+	private LocalDateTime tStart;
+	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSS")
+	private LocalDateTime tEnd;
+	private List<RoutineEndDetailDto> routineEndDetails;
+	private RoutineResultDto routineResult;
 	
 	
-	public RoutineEndTotalEntity toEntity() {
-		return RoutineEndTotalEntity.builder()
-				.retId(retId)
-				.t_start(t_start)
-				.t_end(t_end)
-				.routine(routine)
-				.routineEndDetail(routineEndDetail)
-				.routineResult(routineResult)
-				.build();
+	
+	public static RoutineEndTotalDto toDto(RoutineEndTotalEntity retEntity) {
+		if(retEntity==null) return null;
+		List<RoutineEndDetailEntity> redEntity = retEntity.getRoutineEndDetail();
+		RoutineResultEntity rrEntity = retEntity.getRoutineResult();
+		List<RoutineEndDetailDto> redDto;
+		if(redEntity==null) {
+			redDto = List.of();
+		}
+		else {
+			redDto = redEntity.stream().map(RoutineEndDetailDto::toDto).collect(Collectors.toList());
+		}
+		
+		return RoutineEndTotalDto.builder()
+								.retId(retEntity.getRetId())
+								.tStart(retEntity.getTStart())
+								.tEnd(retEntity.getTEnd())
+								.routineEndDetails(redDto)
+								.routineResult(RoutineResultDto.toDto(rrEntity))
+								.build();
+	
 	}
 }
+

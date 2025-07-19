@@ -73,8 +73,11 @@ public class RoutineController {
 	
 	//루틴 결과 관련 api
 	@PostMapping("{setId}/result")
-	public ResponseEntity<RoutineEndTotalDto> createRoutineEndTotal(@PathVariable Long setId){
-		return null;
+
+	public ResponseEntity<RoutineEndTotalDto> createRoutineEndTotal(@RequestBody RoutineEndTotalDto routineEndTotalDto,@PathVariable Long setId){
+		RoutineEndTotalDto routineEndTotal = routineService.createRoutineEndTotal(routineEndTotalDto,setId);
+		return ResponseEntity.status(HttpStatus.CREATED).body(routineEndTotal);
+
 	}
 	
 }

@@ -1,5 +1,5 @@
 # 1. Maven으로 빌드할 이미지
-FROM maven:3.8.7-openjdk-17 AS build
+FROM maven:3.8.8-eclipse-temurin-17 AS build
 
 WORKDIR /app
 COPY . .

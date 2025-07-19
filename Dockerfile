@@ -1,9 +1,14 @@
+
+
 # 1. Maven으로 빌드할 이미지
 FROM maven:3.8.8-eclipse-temurin-17 AS build
 
 WORKDIR /app
 COPY . .
-
+# 0. wallet 압축 해제
+# wallet.zip 압축 해제
+RUN apt-get update && apt-get install -y unzip && \
+    unzip wallet.zip -d wallet
 RUN mvn clean package -DskipTests
 
 # 2. 실행할 최소 JRE 이미지

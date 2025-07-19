@@ -1,5 +1,11 @@
 #!/bin/sh
 
+echo "=== Listing root directory / ==="
+ls -al /
+
+echo "=== Listing /run/secrets directory ==="
+ls -al /etc/secrets
+
 SECRET_ZIP="/etc/secrets/wallet.zip"
 UNZIP_DIR="/app/wallet"
 

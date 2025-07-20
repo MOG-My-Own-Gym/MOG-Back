@@ -2,6 +2,7 @@ package com.project.mog.controller.users;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.mog.controller.login.LoginRequest;
@@ -22,10 +24,11 @@ import com.project.mog.docs.UsersControllerDocs;
 import com.project.mog.repository.users.UsersEntity;
 import com.project.mog.security.jwt.JwtUtil;
 import com.project.mog.service.users.UsersDto;
+import com.project.mog.service.users.UsersInfoDto;
 import com.project.mog.service.users.UsersService;
 
-
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
@@ -38,9 +41,10 @@ public class UsersController implements UsersControllerDocs{
 	private final JwtUtil jwtUtil;
 	private final UsersService usersService;
 	
+	
 	@GetMapping("list")
-	public ResponseEntity<List<UsersDto>> getAllUsers(){
-		List<UsersDto> users = usersService.getAllUsers();
+	public ResponseEntity<List<UsersInfoDto>> getAllUsers(){
+		List<UsersInfoDto> users = usersService.getAllUsers();
 		return ResponseEntity.ok(users);
 	}
 	
@@ -50,24 +54,24 @@ public class UsersController implements UsersControllerDocs{
 		return ResponseEntity.status(HttpStatus.CREATED).body(createUsers);
 	}
 	@GetMapping("/{usersId}")
-	public ResponseEntity<UsersDto> getUser(@PathVariable Long usersId){
+	public ResponseEntity<UsersInfoDto> getUser(@PathVariable Long usersId){
 		return usersService.getUser(usersId).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
 				
 	}
 	@Transactional
 	@PutMapping("/update/{usersId}")
-	public ResponseEntity<UsersDto> editUser(@RequestHeader("Authorization") String authHeader, @PathVariable Long usersId,@RequestBody UsersDto usersDto){
+	public ResponseEntity<UsersInfoDto> editUser(@RequestHeader("Authorization") String authHeader, @PathVariable Long usersId,@RequestBody UsersInfoDto usersInfoDto){
 		String token = authHeader.replace("Bearer ", "");
 		String authEmail = jwtUtil.extractUserEmail(token);
-		UsersDto editUsers = usersService.editUser(usersDto,usersId,authEmail);
+		UsersInfoDto editUsers = usersService.editUser(usersInfoDto,usersId,authEmail);
 		return ResponseEntity.status(HttpStatus.OK).body(editUsers);
 	}
 	@Transactional
 	@DeleteMapping("/delete/{usersId}")
-	public ResponseEntity<UsersDto> deleteUser(@RequestHeader("Authorization") String authHeader, @PathVariable Long usersId){
+	public ResponseEntity<UsersInfoDto> deleteUser(@RequestHeader("Authorization") String authHeader, @PathVariable Long usersId){
 		String token = authHeader.replace("Bearer ", "");
 		String authEmail = jwtUtil.extractUserEmail(token);
-		UsersDto deleteUsers = usersService.deleteUser(usersId,authEmail);
+		UsersInfoDto deleteUsers = usersService.deleteUser(usersId,authEmail);
 		return ResponseEntity.status(HttpStatus.OK).body(deleteUsers);
 	}
 	

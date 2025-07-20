@@ -3,9 +3,8 @@ package com.project.mog.repository.routine;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.project.mog.repository.auth.AuthEntity;
-import com.project.mog.repository.bios.BiosEntity;
 import com.project.mog.repository.users.UsersEntity;
+
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -27,26 +26,33 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="routinemain")
+@Table(name="routineendtotal")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RoutineEntity {
+public class RoutineEndTotalEntity {
 	@Id
 	@Column(length=19,nullable=false)
-	@SequenceGenerator(name = "SEQ_ROUTINE_GENERATOR",sequenceName = "SEQ_ROUTINE",allocationSize = 1,initialValue = 1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator ="SEQ_ROUTINE_GENERATOR" )	
-	private long setId;
-	
-	@Column(length=200)
-	private String routineName;
+	@SequenceGenerator(name = "SEQ_RET_GENERATOR",sequenceName = "SEQ_RET",allocationSize = 1,initialValue = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator ="SEQ_RET_GENERATOR" )	
+	private long retId;
+
+	private LocalDateTime tStart;
+	private LocalDateTime tEnd;
+
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "usersId", referencedColumnName = "usersId", nullable = false)
-	private UsersEntity user;
+	@JoinColumn(name = "setId", referencedColumnName = "setId", nullable = true)
+	private RoutineEntity routine;
 	
-	@OneToMany(mappedBy = "routine",fetch = FetchType.LAZY)
-	private List<SaveRoutineEntity> saveRoutine;
+
+	@OneToMany(mappedBy = "routineEndTotal", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<RoutineEndDetailEntity> routineEndDetail;
+	
+	@OneToOne(fetch = FetchType.LAZY)
+
+	@JoinColumn(name="rrId",referencedColumnName="rrId",nullable=false)
+	private RoutineResultEntity routineResult;
 }

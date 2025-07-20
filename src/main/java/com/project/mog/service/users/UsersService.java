@@ -19,6 +19,7 @@ import com.project.mog.repository.bios.BiosEntity;
 import com.project.mog.repository.bios.BiosRepository;
 import com.project.mog.repository.users.UsersEntity;
 import com.project.mog.repository.users.UsersRepository;
+import com.project.mog.service.bios.BiosDto;
 
 @Service
 public class UsersService {
@@ -36,8 +37,9 @@ public class UsersService {
 		}
 
 
-		public List<UsersDto> getAllUsers() {
-			return usersRepository.findAll().stream().map(UsersDto::toDto).collect(Collectors.toList());
+		public List<UsersInfoDto> getAllUsers() {
+			
+			return usersRepository.findAll().stream().map(UsersInfoDto::toDto).collect(Collectors.toList());
 		}
 
 
@@ -45,17 +47,16 @@ public class UsersService {
 			UsersEntity isDuplicated = usersRepository.findByEmail(usersDto.getEmail());
 			if(isDuplicated!=null) throw new IllegalArgumentException("중복된 아이디입니다");
 			UsersEntity uEntity = usersRepository.save(usersDto.toEntity());
-			
 			return UsersDto.toDto(uEntity);
 		}
 
 
-		public Optional<UsersDto> getUser(Long usersId) {
-			return usersRepository.findById(usersId).map(uEntity->UsersDto.toDto(uEntity));
+		public Optional<UsersInfoDto> getUser(Long usersId) {
+			return usersRepository.findById(usersId).map(uEntity->UsersInfoDto.toDto(uEntity));
 		}
 
 		@UserAuthorizationCheck
-		public UsersDto deleteUser(Long usersId, String authEmail) {
+		public UsersInfoDto deleteUser(Long usersId, String authEmail) {
 			UsersEntity currentUser = usersRepository.findByEmail(authEmail);
 			UsersEntity targetUser = usersRepository.findById(usersId).orElseThrow(()->new RuntimeException("삭제할 사용자를 찾을 수 없습니다"));
 			
@@ -63,11 +64,11 @@ public class UsersService {
 			if(currentUser.getUsersId()!=targetUser.getUsersId()) throw new AccessDeniedException("자기 자신만 삭제 가능합니다");
 			
 			usersRepository.deleteById(usersId);
-			return UsersDto.toDto(targetUser);
+			return UsersInfoDto.toDto(targetUser);
 		}
 
 		@UserAuthorizationCheck
-		public UsersDto editUser(UsersDto usersDto, Long usersId, String authEmail) {
+		public UsersInfoDto editUser(UsersInfoDto usersInfoDto, Long usersId, String authEmail) {
 //			UsersEntity currentUser = usersRepository.findByEmail(authEmail);
 //			UsersEntity targetUser = usersRepository.findById(usersId).orElseThrow(()->new RuntimeException("수정할 사용자를 찾을 수 없습니다"));
 //			
@@ -77,31 +78,8 @@ public class UsersService {
 			
 			UsersEntity usersEntity =usersRepository.findById(usersId).orElseThrow(()->new IllegalArgumentException(usersId+"가 존재하지 않습니다"));
 			BiosEntity biosEntity = biosRepository.findByUser(usersEntity);
-			AuthEntity authEntity = authRepository.findByUser(usersEntity);
-			usersEntity.setUsersName(usersDto.getUsersName());
-			usersEntity.setProfileImg(usersDto.getProfileImg()!=null?usersDto.getProfileImg():null);
-			usersEntity.setUpdateDate();
 			
-			
-			//아래는 연관관계 업데이트
-			
-			//biosDto 업데이트
-			if(usersDto.getBiosDto()!=null) {
-				biosEntity.setAge(usersDto.getBiosDto().getAge());
-				biosEntity.setGender(usersDto.getBiosDto().isGender());
-				biosEntity.setHeight(usersDto.getBiosDto().getHeight());
-				biosEntity.setWeight(usersDto.getBiosDto().getWeight());
-				biosEntity.setUser(usersEntity);
-			}
-			else {
-				usersEntity.setBios(null);
-			}
-			
-			
-			//authDto 업데이트
-			authEntity.setPassword(usersDto.getAuthDto().getPassword());
-			
-			return UsersDto.toDto(usersEntity);
+			return usersInfoDto.applyTo(usersEntity, biosEntity);
 		}
 
 		public UsersDto login(LoginRequest request) {

@@ -37,7 +37,7 @@ spring:
       properties:
         hibernate:
           format_sql: true
-      database-platform: org.hibernate.dialect.Oracle12cDialect
+      database-platform: org.hibernate.dialect.OracleDialect
       
 jwttoken:
   secret-key: Nf/vIRqt0/bKThqJ6tOy2M9tqJX+rJxGG9HrZgsBrT4=

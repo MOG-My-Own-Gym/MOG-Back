@@ -80,4 +80,12 @@ public class RoutineController {
 
 	}
 	
+	@GetMapping("/result")
+	public ResponseEntity<List<RoutineEndTotalDto>> getAllRoutineEndTotals(@RequestHeader("Authorization") String authHeader){
+		String token = authHeader.replace("Bearer ", "");
+		String authEmail = jwtUtil.extractUserEmail(token);
+		List<RoutineEndTotalDto> routineEndTotals = routineService.getAllRoutineEndTotals(authEmail);
+		return ResponseEntity.status(HttpStatus.OK).body(routineEndTotals);
+	}
+	
 }

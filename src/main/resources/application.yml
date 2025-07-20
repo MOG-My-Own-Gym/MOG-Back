@@ -18,7 +18,7 @@ spring:
   #데이타 베이스 연결을 위한 설정
     datasource: #필수 설정
       driver-class-name: oracle.jdbc.OracleDriver
-      url: jdbc:oracle:thin:@mogdb_high?TNS_ADMIN=/app/wallet&oracle.net.ssl_server_dn_match=false
+      url: jdbc:oracle:thin:@mogdb_high?TNS_ADMIN=app/wallet&oracle.net.ssl_server_dn_match=false&oracle.net.ssl_version=1.2
       username: admin
       password: ${DB_PASSWORD}
   #스프링 부트의 디폴트 커넥션 풀인 Hikari 디폴트 설정.

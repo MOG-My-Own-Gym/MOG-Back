@@ -109,6 +109,15 @@ public class RoutineService {
 		routineEndTotalRepository.save(retEntity);
 		return RoutineEndTotalDto.toDto(retEntity);
 	}
+	public List<RoutineEndTotalDto> getAllRoutineEndTotals(String authEmail) {
+		UsersEntity currentUser = usersRepository.findByEmail(authEmail);
+		List<RoutineEntity> routineEntities = routineRepository.findByUsersId(currentUser.getUsersId()).stream().collect(Collectors.toList());
+		List<RoutineEndTotalEntity> allRoutineEndTotals = routineEntities.stream()
+			    .flatMap(routine -> routineEndTotalRepository.findAllBySetId(routine.getSetId()).stream())
+			    .collect(Collectors.toList());
+		System.out.println(allRoutineEndTotals);
+		return allRoutineEndTotals.stream().map(RoutineEndTotalDto::toDto).collect(Collectors.toList());
+	}
 
 
 }

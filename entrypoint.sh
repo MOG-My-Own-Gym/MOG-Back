@@ -10,6 +10,9 @@ if [ -f "$SECRET_B64_FILE" ]; then
 
   mkdir -p "$UNZIP_DIR"
   unzip "$ZIP_PATH" -d "$UNZIP_DIR"
+  
+  echo "checking unziped files..."
+  ls -al "$UNZIP_DIR"
 else
   echo "Secret file $SECRET_B64_FILE not found. Skipping unzip."
 fi

@@ -1,9 +1,9 @@
 server: #디폴트 8080
-  port: 8080 
+  port: ${PORT:8080} 
   servlet:
     session:
       timeout: 1800 #30분이 기본값
-  address: 127.0.0.1
+  address: 0.0.0.0
 spring:
   #messages.properties파일 위치 설정.기본값은 messages
     messages:

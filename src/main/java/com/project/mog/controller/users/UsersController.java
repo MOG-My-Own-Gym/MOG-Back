@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.mog.controller.login.LoginRequest;
 import com.project.mog.controller.login.LoginResponse;
+import com.project.mog.controller.login.SocialLoginRequest;
 import com.project.mog.docs.UsersControllerDocs;
 import com.project.mog.repository.users.UsersEntity;
 import com.project.mog.security.jwt.JwtUtil;
@@ -56,7 +57,10 @@ public class UsersController implements UsersControllerDocs{
 	@GetMapping("/{usersId}")
 	public ResponseEntity<UsersInfoDto> getUser(@PathVariable Long usersId){
 		return usersService.getUser(usersId).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-				
+	}
+	@GetMapping("/email/{email}")
+	public ResponseEntity<UsersInfoDto> getUserByEmail(@PathVariable String email){
+		return usersService.getUserByEmail(email).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
 	}
 	@Transactional
 	@PutMapping("/update/{usersId}")
@@ -93,6 +97,24 @@ public class UsersController implements UsersControllerDocs{
 											.refreshToken(refreshToken)
 											.build();
 		
+		return ResponseEntity.status(HttpStatus.OK).body(loginResponse);
+	}
+	
+
+	@PostMapping("login/kakao")
+	public ResponseEntity<LoginResponse> socialLogin(@RequestBody SocialLoginRequest request){
+		UsersDto usersDto = usersService.socialLogin(request);
+		long usersId = usersDto.getUsersId();
+		String email = usersDto.getEmail();
+		String accessToken = jwtUtil.generateAccessToken(email);
+		String refreshToken = jwtUtil.generateRefreshToken(email);
+		
+		LoginResponse loginResponse = LoginResponse.builder()
+										.usersId(usersId)
+										.email(email)
+										.accessToken(accessToken)
+										.refreshToken(refreshToken)
+										.build();
 		return ResponseEntity.status(HttpStatus.OK).body(loginResponse);
 	}
 	

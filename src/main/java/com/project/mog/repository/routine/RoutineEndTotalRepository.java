@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface RoutineEndTotalRepository extends JpaRepository<RoutineEndTotalEntity, Long> {
 
+
 	@Query(nativeQuery=true,value="SELECT * FROM routineendtotal WHERE setid=?1" )
 	List<RoutineEndTotalEntity> findAllBySetId(long setId);
 

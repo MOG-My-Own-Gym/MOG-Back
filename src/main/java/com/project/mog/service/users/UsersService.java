@@ -11,8 +11,10 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import com.project.mog.annotation.UserAuthorizationCheck;
+import com.project.mog.api.KakaoApiClient;
 import com.project.mog.controller.login.LoginRequest;
 import com.project.mog.controller.login.LoginResponse;
+import com.project.mog.controller.login.SocialLoginRequest;
 import com.project.mog.repository.auth.AuthEntity;
 import com.project.mog.repository.auth.AuthRepository;
 import com.project.mog.repository.bios.BiosEntity;
@@ -27,13 +29,15 @@ public class UsersService {
 		private UsersRepository usersRepository;
 		private BiosRepository biosRepository;
 		private AuthRepository authRepository;
+		private KakaoApiClient kakaoApiClient;
 		
 		
-		@Autowired
-		public UsersService(UsersRepository usersRepository, BiosRepository biosRepository,AuthRepository authRepository ) {
+		
+		public UsersService(UsersRepository usersRepository, BiosRepository biosRepository,AuthRepository authRepository, KakaoApiClient kakaoApiClient ) {
 			this.usersRepository=usersRepository;
 			this.biosRepository=biosRepository;
 			this.authRepository=authRepository;
+			this.kakaoApiClient=kakaoApiClient;
 		}
 
 
@@ -44,7 +48,7 @@ public class UsersService {
 
 
 		public UsersDto createUser(UsersDto usersDto) {
-			UsersEntity isDuplicated = usersRepository.findByEmail(usersDto.getEmail());
+			UsersEntity isDuplicated = usersRepository.findByEmail(usersDto.getEmail()).orElse(null);
 			if(isDuplicated!=null) throw new IllegalArgumentException("중복된 아이디입니다");
 			UsersEntity uEntity = usersRepository.save(usersDto.toEntity());
 			return UsersDto.toDto(uEntity);
@@ -54,10 +58,14 @@ public class UsersService {
 		public Optional<UsersInfoDto> getUser(Long usersId) {
 			return usersRepository.findById(usersId).map(uEntity->UsersInfoDto.toDto(uEntity));
 		}
+		
+		public Optional<UsersInfoDto> getUserByEmail(String email) {
+			return usersRepository.findByEmail(email).map(uEntity->UsersInfoDto.toDto(uEntity));
+		}
 
 		@UserAuthorizationCheck
 		public UsersInfoDto deleteUser(Long usersId, String authEmail) {
-			UsersEntity currentUser = usersRepository.findByEmail(authEmail);
+			UsersEntity currentUser = usersRepository.findByEmail(authEmail).orElseThrow(()->new IllegalArgumentException("유효하지 않은 사용자입니다"));
 			UsersEntity targetUser = usersRepository.findById(usersId).orElseThrow(()->new RuntimeException("삭제할 사용자를 찾을 수 없습니다"));
 			
 			//권한을 가진 유저의 수정 요청인지 확인
@@ -88,6 +96,35 @@ public class UsersService {
 			return UsersDto.toDto(usersEntity);
 			
 		}
+
+
+		public UsersDto socialLogin(SocialLoginRequest request) {
+			System.out.println("social?");
+			System.out.println(request.getSocialType().equalsIgnoreCase("kakao"));
+			if(request.getSocialType().equalsIgnoreCase("kakao")) {
+				System.out.println("on kakao?");
+				KakaoUser kakaoUser = kakaoApiClient.getUserInfo(request.getAccessToken());
+				UsersEntity usersEntity = usersRepository.findByEmail(String.format("user%s@kakao.com", kakaoUser.getId())).orElse(null);
+				if(usersEntity==null) {
+					AuthEntity newKakaoAuth = AuthEntity.builder().password(request.getAccessToken()).build();
+					UsersEntity newKakaoUser = UsersEntity.builder()
+													.usersName(kakaoUser.getProperties().getNickname())
+													.email("user"+kakaoUser.getId()+"@kakao.com")
+													.profileImg(kakaoUser.getProperties().getProfile_image())
+													.nickName(kakaoUser.getProperties().getNickname())
+													.bios(null)
+													.auth(newKakaoAuth)
+													.build();
+					return createUser(UsersDto.toDto(newKakaoUser));
+				}
+				return UsersDto.toDto(usersEntity);
+			}
+			
+			return null;
+		}
+
+
+		
 		
 		
 		

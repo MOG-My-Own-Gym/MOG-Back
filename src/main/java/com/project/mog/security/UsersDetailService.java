@@ -19,7 +19,7 @@ public class UsersDetailService implements UserDetailsService{
 
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException{
-			UsersEntity users = usersRepository.findByEmail(email);
+			UsersEntity users = usersRepository.findByEmail(email).orElseThrow(()->new IllegalArgumentException("유효하지 않은 사용자입니다"));
 			if(users==null) throw new UsernameNotFoundException("계정을 찾을 수 없습니다");
 			return new UsersDetails(users);
 		

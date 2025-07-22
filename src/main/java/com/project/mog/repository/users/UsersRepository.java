@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.project.mog.repository.bios.BiosEntity;
 
+
 public interface UsersRepository extends JpaRepository<UsersEntity, Long>{
 
 	Optional<UsersEntity> findById(Long usersId);
@@ -16,4 +17,7 @@ public interface UsersRepository extends JpaRepository<UsersEntity, Long>{
 
 	@Query(nativeQuery = true,value="SELECT * FROM USERS WHERE USERS.EMAIL=?1")
 	Optional<UsersEntity> findByEmail(String email);
+
+	@Query(nativeQuery = true, value="SELECT * FROM USERS WHERE USERS.USERSNAME=?1 AND PHONENUM=?2")
+	Optional<UsersEntity> findByUsersNameAndPhoneNum(String usersName, String phoneNum);
 }

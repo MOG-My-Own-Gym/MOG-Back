@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.project.mog.annotation.UserAuthorizationCheck;
+import com.project.mog.controller.routine.RoutineEndTotalRequest;
 import com.project.mog.repository.routine.RoutineEndDetailEntity;
 import com.project.mog.repository.routine.RoutineEndDetailRepository;
 import com.project.mog.repository.routine.RoutineEndTotalEntity;
@@ -16,7 +17,6 @@ import com.project.mog.repository.routine.RoutineEntity;
 import com.project.mog.repository.routine.RoutineRepository;
 import com.project.mog.repository.routine.RoutineResultEntity;
 import com.project.mog.repository.routine.RoutineResultRepository;
-
 import com.project.mog.repository.routine.SaveRoutineEntity;
 import com.project.mog.repository.routine.SaveRoutineRepository;
 import com.project.mog.repository.users.UsersEntity;
@@ -33,11 +33,9 @@ public class RoutineService {
 	private final UsersRepository usersRepository;
 	private final RoutineRepository routineRepository;
 	private final SaveRoutineRepository saveRoutineRepository;
-
 	private final RoutineEndTotalRepository routineEndTotalRepository;
 	private final RoutineEndDetailRepository routineEndDetailRepository;
 	private final RoutineResultRepository routineResultRepository;
-
 	
 	public RoutineEntity toEntity(UsersEntity uEntity, RoutineDto routineDto) {
 		RoutineEntity rEntity = RoutineEntity.builder()
@@ -49,8 +47,6 @@ public class RoutineService {
 	public RoutineEndTotalEntity toEntity(RoutineEndTotalDto retDto, Long setId) {
 		RoutineEntity rEntity = routineRepository.findById(setId).orElseThrow(()->new IllegalArgumentException("루틴을 찾을 수 없습니다"));
 		RoutineEndTotalEntity retEntity = RoutineEndTotalEntity.builder()
-				.tStart(retDto.getTStart())
-				.tEnd(retDto.getTEnd())
 				.routineResult(retDto.getRoutineResult().toEntity())
 				.build();
 		List<RoutineEndDetailEntity> redEntity = retDto.getRoutineEndDetails().stream()
@@ -93,7 +89,6 @@ public class RoutineService {
 		return SaveRoutineDto.toDto(saveRoutineEntity);
 	}
 
-
 	public RoutineEndTotalDto createRoutineEndTotal(RoutineEndTotalDto retDto, Long setId) {
 		RoutineEntity routineEntity = routineRepository.findById(setId).orElseThrow(()->new IllegalArgumentException("루틴을 찾을 수 없습니다"));
 		
@@ -110,12 +105,13 @@ public class RoutineService {
 		routineEndTotalRepository.save(retEntity);
 		return RoutineEndTotalDto.toDto(retEntity);
 	}
-
 	
-	public List<RoutineEndTotalDto> getRoutineEndTotal(String authEmail) {
+	public List<RoutineEndTotalDto> getRoutineEndTotal(String authEmail, RoutineEndTotalRequest routineEndTotalRequest) {
 		UsersEntity userEntity = usersRepository.findByEmail(authEmail).orElseThrow(()->new IllegalArgumentException("유효하지 않은 사용자입니다"));
 		List<RoutineEntity> routineEntities = routineRepository.findByUsersId(userEntity.getUsersId());
-		List<RoutineEndTotalEntity> routineEndTotalEntities = routineEntities.stream().flatMap(routine->routineEndTotalRepository.findAllBySetId(routine.getSetId()).stream()).collect(Collectors.toList());
+		List<RoutineEndTotalEntity> routineEndTotalEntities = routineEndTotalRequest==null?
+																routineEntities.stream().flatMap(routine->routineEndTotalRepository.findAllBySetId(routine.getSetId()).stream()).collect(Collectors.toList())
+																:routineEntities.stream().flatMap(routine->routineEndTotalRepository.findAllBySetIdAndDateBetween(routine.getSetId(),routineEndTotalRequest.getStartDate(),routineEndTotalRequest.getEndDate()).stream()).collect(Collectors.toList());
 				
 		return routineEndTotalEntities.stream().map(RoutineEndTotalDto::toDto).collect(Collectors.toList());
 	}

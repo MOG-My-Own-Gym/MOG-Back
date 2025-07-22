@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.project.mog.annotation.UserAuthorizationCheck;
 import com.project.mog.api.KakaoApiClient;
+import com.project.mog.controller.auth.EmailFindRequest;
 import com.project.mog.controller.login.LoginRequest;
 import com.project.mog.controller.login.LoginResponse;
 import com.project.mog.controller.login.SocialLoginRequest;
@@ -55,12 +56,12 @@ public class UsersService {
 		}
 
 
-		public Optional<UsersInfoDto> getUser(Long usersId) {
-			return usersRepository.findById(usersId).map(uEntity->UsersInfoDto.toDto(uEntity));
+		public UsersInfoDto getUser(Long usersId) {
+			return usersRepository.findById(usersId).map(uEntity->UsersInfoDto.toDto(uEntity)).orElseThrow(()->new IllegalArgumentException("사용자를 찾을 수 없습니다"));
 		}
 		
-		public Optional<UsersInfoDto> getUserByEmail(String email) {
-			return usersRepository.findByEmail(email).map(uEntity->UsersInfoDto.toDto(uEntity));
+		public UsersInfoDto getUserByEmail(String email) {
+			return usersRepository.findByEmail(email).map(uEntity->UsersInfoDto.toDto(uEntity)).orElseThrow(()->new IllegalArgumentException("사용자를 찾을 수 없습니다"));
 		}
 
 		@UserAuthorizationCheck
@@ -76,14 +77,7 @@ public class UsersService {
 		}
 
 		@UserAuthorizationCheck
-		public UsersInfoDto editUser(UsersInfoDto usersInfoDto, Long usersId, String authEmail) {
-//			UsersEntity currentUser = usersRepository.findByEmail(authEmail);
-//			UsersEntity targetUser = usersRepository.findById(usersId).orElseThrow(()->new RuntimeException("수정할 사용자를 찾을 수 없습니다"));
-//			
-//			//권한을 가진 유저의 수정 요청인지 확인
-//			if(currentUser.getUsersId()!=targetUser.getUsersId()) throw new AccessDeniedException("자기 자신만 수정 가능합니다");
-//			
-			
+		public UsersInfoDto editUser(UsersInfoDto usersInfoDto, Long usersId, String authEmail) {		
 			UsersEntity usersEntity =usersRepository.findById(usersId).orElseThrow(()->new IllegalArgumentException(usersId+"가 존재하지 않습니다"));
 			BiosEntity biosEntity = biosRepository.findByUser(usersEntity);
 			
@@ -121,6 +115,28 @@ public class UsersService {
 			}
 			
 			return null;
+		}
+
+
+		public UsersDto checkPassword(String authEmail, String password) {
+			UsersEntity usersEntity = usersRepository.findByEmailAndPassword(authEmail, password).orElseThrow(()->new IllegalArgumentException("사용자를 찾을 수 없습니다"));
+			return UsersDto.toDto(usersEntity);
+			
+		}
+
+
+		
+		public UsersDto editPassword(String authEmail, String originPassword, String newPassword) {
+			UsersEntity usersEntity = usersRepository.findByEmailAndPassword(authEmail, originPassword).orElseThrow(()->new IllegalArgumentException("사용자를 찾을 수 없습니다"));
+			AuthEntity authEntity = usersEntity.getAuth();
+			authEntity.setPassword(newPassword);
+			return UsersDto.toDto(usersEntity);
+		}
+
+
+		public UsersInfoDto getUserByRequest(EmailFindRequest emailFindRequest) {
+			UsersEntity usersEntity = usersRepository.findByUsersNameAndPhoneNum(emailFindRequest.getUsersName(),emailFindRequest.getPhoneNum()).orElseThrow(()->new IllegalArgumentException("사용자를 찾을 수 없습니다"));
+			return UsersInfoDto.toDto(usersEntity);
 		}
 
 

@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 import com.project.mog.repository.auth.AuthEntity;
 
-
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +17,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class AuthDto {
+	@Schema(description = "authId",example="1")
 	private long authId;
+	@Schema(description = "password",example="testuser1")
 	private String password;
 	private LocalDateTime connectTime;
 	
@@ -25,7 +27,7 @@ public class AuthDto {
 			return AuthEntity.builder()
 					.authId(authId)
 					.password(password)
-					.connectTime(connectTime)
+					.connectTime(connectTime )
 					.build();
 	}
 	

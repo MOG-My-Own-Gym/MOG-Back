@@ -31,7 +31,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class UsersEntity {
-	
 	@Id
 	@Column(length=19,nullable=false)
 	@SequenceGenerator(name = "SEQ_USERS_GENERATOR",sequenceName = "SEQ_USERS",allocationSize = 1,initialValue = 1)
@@ -40,6 +39,9 @@ public class UsersEntity {
 	
 	@Column(length = 10,nullable = false)
 	private String usersName;
+	
+	@Column(name = "NICKNAME",length= 100, nullable = false)
+	private String nickName;
 	
 	@Column(length = 100,nullable = false)
 	private String email;

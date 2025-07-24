@@ -1,7 +1,9 @@
-package com.project.mog.controller;
+package com.project.mog.controller.post;
 
-import com.project.mog.dto.PostDto;
-import com.project.mog.service.PostService;
+import com.project.mog.security.jwt.JwtUtil;
+import com.project.mog.service.post.PostDto;
+import com.project.mog.service.post.PostService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,23 +17,25 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/posts")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")  // 프론트 연동 시 CORS 허용
 public class PostController {
-
+	private final JwtUtil jwtUtil;
     private final PostService postService;
 
     // 1) 게시글 등록
     @PostMapping
-    public ResponseEntity<PostDto> create(@RequestBody PostDto dto) {
-        dto.setUserId(1L); // 🟡 임시 유저 ID
-        PostDto created = postService.create(dto);
+    public ResponseEntity<PostDto> create(@RequestHeader("Authorization") String authHeader,@RequestBody PostDto dto) {
+    	String token = authHeader.replace("Bearer ", "");
+		String authEmail = jwtUtil.extractUserEmail(token);
+    	PostDto created = postService.create(authEmail,dto);
         return ResponseEntity.ok(created);
     }
 
     // 2) 게시글 목록 조회
     @GetMapping
-    public ResponseEntity<List<PostDto>> list() {
-        return ResponseEntity.ok(postService.listAll());
+    public ResponseEntity<List<PostDto>> list(@RequestHeader("Authorization") String authHeader) {
+    	String token = authHeader.replace("Bearer ", "");
+		String authEmail = jwtUtil.extractUserEmail(token);
+        return ResponseEntity.ok(postService.listAll(authEmail));
     }
 
     // 3) 게시글 수정
@@ -50,9 +54,9 @@ public class PostController {
 
     // 5) 게시글 삭제
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long id) {
-        postService.delete(id);
-        return ResponseEntity.noContent().build(); // 204
+    public ResponseEntity<PostDto> deletePost(@PathVariable Long id) {
+        PostDto post = postService.delete(id);
+        return ResponseEntity.ok(post); 
     }
 
     // 6) 이미지 업로드 API

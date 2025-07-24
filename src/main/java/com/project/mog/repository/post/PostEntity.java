@@ -1,8 +1,10 @@
-package com.project.mog.entity;
+package com.project.mog.repository.post;
 
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+
+import com.project.mog.repository.users.UsersEntity;
 
 @Entity                         
 @Table(name = "posts")
@@ -12,10 +14,9 @@ import java.time.LocalDateTime;
 @Builder                        
 public class PostEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "SEQ_POST_GENERATOR",sequenceName = "SEQ_POST",allocationSize = 1,initialValue = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator ="SEQ_POST_GENERATOR" )
     private Long postId;         // 글 고유번호 (PK)
-
-    private Long userId;         // 작성자 ID (외래키, 나중에 User와 연결)
 
     @Column(length = 100, nullable = false)
     private String postTitle;    // 글 제목
@@ -28,5 +29,7 @@ public class PostEntity {
     private LocalDateTime postRegDate; // 등록 시각
     private LocalDateTime postUpDate;  // 수정 시각
     
-    
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "usersId", referencedColumnName = "usersId", nullable = true)
+	private UsersEntity user;
 }

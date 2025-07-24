@@ -1,7 +1,15 @@
 package com.project.mog.repository.post;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
 
-public interface PostRepository extends JpaRepository<Post, Long> {
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import com.project.mog.service.post.PostDto;
+
+public interface PostRepository extends JpaRepository<PostEntity, Long> {
+
+	@Query(nativeQuery=true, value="SELECT * FROM POSTS WHERE USERSID=?1 ORDER BY POSTREGDATE DESC")
+	List<PostEntity> findAllOrderByRegDate(Long usersId);
     
 }

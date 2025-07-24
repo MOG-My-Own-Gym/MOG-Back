@@ -18,8 +18,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.mog.controller.auth.EmailFindRequest;
+import com.project.mog.controller.auth.PasswordCheckRequest;
+import com.project.mog.controller.auth.PasswordUpdateRequest;
 import com.project.mog.controller.login.LoginRequest;
 import com.project.mog.controller.login.LoginResponse;
+import com.project.mog.controller.login.SocialLoginRequest;
 import com.project.mog.docs.UsersControllerDocs;
 import com.project.mog.repository.users.UsersEntity;
 import com.project.mog.security.jwt.JwtUtil;
@@ -53,10 +57,15 @@ public class UsersController implements UsersControllerDocs{
 		UsersDto createUsers = usersService.createUser(usersDto);
 		return ResponseEntity.status(HttpStatus.CREATED).body(createUsers);
 	}
-	@GetMapping("/{usersId}")
+	@GetMapping("/{usersId:\\d+}")
 	public ResponseEntity<UsersInfoDto> getUser(@PathVariable Long usersId){
-		return usersService.getUser(usersId).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-				
+		UsersInfoDto findUsers = usersService.getUser(usersId);
+		return ResponseEntity.status(HttpStatus.OK).body(findUsers);
+	}
+	@GetMapping("/email/{email}")
+	public ResponseEntity<UsersInfoDto> getUserByEmail(@PathVariable String email){
+		UsersInfoDto findUsers = usersService.getUserByEmail(email);
+		return ResponseEntity.status(HttpStatus.OK).body(findUsers);
 	}
 	@Transactional
 	@PutMapping("/update/{usersId}")
@@ -95,5 +104,53 @@ public class UsersController implements UsersControllerDocs{
 		
 		return ResponseEntity.status(HttpStatus.OK).body(loginResponse);
 	}
+	
+	@PostMapping("login/kakao")
+	public ResponseEntity<LoginResponse> socialLogin(@RequestBody SocialLoginRequest request){
+		UsersDto usersDto = usersService.socialLogin(request);
+		long usersId = usersDto.getUsersId();
+		String email = usersDto.getEmail();
+		String accessToken = jwtUtil.generateAccessToken(email);
+		String refreshToken = jwtUtil.generateRefreshToken(email);
+		
+		LoginResponse loginResponse = LoginResponse.builder()
+										.usersId(usersId)
+										.email(email)
+										.accessToken(accessToken)
+										.refreshToken(refreshToken)
+										.build();
+		return ResponseEntity.status(HttpStatus.OK).body(loginResponse);
+	}
+	
+	@GetMapping("auth/email/find")
+	public ResponseEntity<UsersInfoDto> findEmail(@RequestBody EmailFindRequest emailFindRequest){
+		UsersInfoDto usersInfoDto = usersService.getUserByRequest(emailFindRequest);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(usersInfoDto);
+		
+	}
+	
+	@GetMapping("auth/password/check")
+	public ResponseEntity<UsersDto> checkPassword(@RequestHeader("Authorization") String authHeader, @RequestBody PasswordCheckRequest passwordCheckRequest){
+		String token = authHeader.replace("Bearer ", "");
+		String authEmail = jwtUtil.extractUserEmail(token);
+		String password = passwordCheckRequest.getPassword();
+		UsersDto usersDto = usersService.checkPassword(authEmail,password);
+		return ResponseEntity.status(HttpStatus.OK).body(usersDto);
+	}
+	
+	@Transactional
+	@PutMapping("auth/password/update")
+	public ResponseEntity<UsersDto> editPassword(@RequestHeader("Authorization") String authHeader, @RequestBody PasswordUpdateRequest passwordUpdateRequest){
+		String token = authHeader.replace("Bearer ", "");
+		String authEmail = jwtUtil.extractUserEmail(token);
+		String originPassword = passwordUpdateRequest.getOriginPassword();
+		String newPassword = passwordUpdateRequest.getNewPassword();
+		
+		UsersDto usersDto = usersService.editPassword(authEmail,originPassword,newPassword);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(usersDto);
+	}
+	
 	
 }

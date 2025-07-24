@@ -2,6 +2,7 @@ package com.project.mog.service.users;
 
 import java.time.LocalDateTime;
 
+import com.project.mog.repository.auth.AuthEntity;
 import com.project.mog.repository.bios.BiosEntity;
 import com.project.mog.repository.users.UsersEntity;
 import com.project.mog.service.auth.AuthDto;
@@ -33,7 +34,8 @@ public class UsersInfoDto {
 	private String email;
 	@Schema(description = "profileImg",example="profileImg.png")
 	private String profileImg;
-
+	@Schema(description = "phoneNum", example="01012345678")
+	private String phoneNum;
 	private LocalDateTime regDate;
 	private LocalDateTime updateDate;
 	
@@ -61,6 +63,7 @@ public class UsersInfoDto {
 				.usersName(user.getUsersName())
 				.profileImg(user.getProfileImg())
 				.nickName(user.getNickName())
+				.phoneNum(user.getPhoneNum())
 				.regDate(user.getRegDate())
 				.updateDate(user.getUpdateDate())
 				.biosDto(BiosDto.toDto(user.getBios()))
@@ -73,6 +76,7 @@ public class UsersInfoDto {
 				.usersName(user.getUsersName())
 				.profileImg(user.getProfileImg())
 				.nickName(user.getNickName())
+				.phoneNum(user.getPhoneNum())
 				.regDate(user.getRegDate())
 				.updateDate(user.getUpdateDate())
 				.biosDto(BiosDto.toDto(user.getBios()))

@@ -73,19 +73,17 @@ public class RoutineController {
 	
 	//루틴 결과 관련 api
 	@PostMapping("{setId}/result")
-
 	public ResponseEntity<RoutineEndTotalDto> createRoutineEndTotal(@RequestBody RoutineEndTotalDto routineEndTotalDto,@PathVariable Long setId){
 		RoutineEndTotalDto routineEndTotal = routineService.createRoutineEndTotal(routineEndTotalDto,setId);
 		return ResponseEntity.status(HttpStatus.CREATED).body(routineEndTotal);
-
 	}
 	
-	@GetMapping("/result")
-	public ResponseEntity<List<RoutineEndTotalDto>> getAllRoutineEndTotals(@RequestHeader("Authorization") String authHeader){
+	@GetMapping("result") //이후 기간 추가해야함(모든 데이터 반환시 서버에 가해지는 부하 고려)
+	public ResponseEntity<List<RoutineEndTotalDto>> getRoutineEndTotal(@RequestHeader("Authorization") String authHeader, @RequestBody(required = false) RoutineEndTotalRequest routineEndTotalRequest){
 		String token = authHeader.replace("Bearer ", "");
 		String authEmail = jwtUtil.extractUserEmail(token);
-		List<RoutineEndTotalDto> routineEndTotals = routineService.getAllRoutineEndTotals(authEmail);
-		return ResponseEntity.status(HttpStatus.OK).body(routineEndTotals);
+		List<RoutineEndTotalDto> routineEndTotal = routineService.getRoutineEndTotal(authEmail,routineEndTotalRequest);
+		return ResponseEntity.status(HttpStatus.OK).body(routineEndTotal);
 	}
 	
 }

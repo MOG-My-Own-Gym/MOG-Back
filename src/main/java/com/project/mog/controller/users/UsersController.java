@@ -122,7 +122,7 @@ public class UsersController implements UsersControllerDocs{
 		return ResponseEntity.status(HttpStatus.OK).body(loginResponse);
 	}
 	
-	@GetMapping("auth/email/find")
+	@PostMapping("auth/email/find")
 	public ResponseEntity<UsersInfoDto> findEmail(@RequestBody EmailFindRequest emailFindRequest){
 		UsersInfoDto usersInfoDto = usersService.getUserByRequest(emailFindRequest);
 		

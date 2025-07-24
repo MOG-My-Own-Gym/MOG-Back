@@ -130,7 +130,7 @@ public class UsersController implements UsersControllerDocs{
 		
 	}
 	
-	@GetMapping("auth/password/check")
+	@PostMapping("auth/password/check")
 	public ResponseEntity<UsersDto> checkPassword(@RequestHeader("Authorization") String authHeader, @RequestBody PasswordCheckRequest passwordCheckRequest){
 		String token = authHeader.replace("Bearer ", "");
 		String authEmail = jwtUtil.extractUserEmail(token);

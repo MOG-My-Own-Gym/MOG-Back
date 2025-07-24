@@ -27,7 +27,7 @@ public class AuthDto {
 			return AuthEntity.builder()
 					.authId(authId)
 					.password(password)
-					.connectTime(connectTime )
+					.connectTime(connectTime)
 					.build();
 	}
 	

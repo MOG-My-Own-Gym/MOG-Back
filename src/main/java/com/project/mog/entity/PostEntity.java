@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor              
 @AllArgsConstructor             
 @Builder                        
-public class Post {
+public class PostEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId;         // 글 고유번호 (PK)

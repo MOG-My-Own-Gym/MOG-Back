@@ -1,7 +1,7 @@
 package com.project.mog.service;
 
 import com.project.mog.dto.PostDto;
-import com.project.mog.entity.Post;
+import com.project.mog.entity.PostEntity;
 import com.project.mog.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,14 +17,14 @@ public class PostService {
     // 게시글 저장
     public PostDto create(PostDto dto) {
         // DTO → Entity
-        Post post = Post.builder()
+        PostEntity post = PostEntity.builder()
                 .userId(dto.getUserId())
                 .postTitle(dto.getPostTitle())
                 .postContent(dto.getPostContent())
                 .postImage(dto.getPostImage())
                 .build();
         // 저장하고 영속화된 Entity 리턴
-        Post saved = postRepository.save(dto.toEntity());
+        PostEntity saved = postRepository.save(dto.toEntity());
 
         // Entity → DTO 변환 후 리턴
         return PostDto.builder()
@@ -54,7 +54,7 @@ public class PostService {
     }
     //게시들 한건 조회
     public PostDto getById(Long id) {
-        Post post = postRepository.findById(id)
+        PostEntity post = postRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다: id=" + id));
 
         return PostDto.builder()
@@ -69,7 +69,7 @@ public class PostService {
     }
     //게시글 수정
     public PostDto update(Long id, PostDto dto) {
-        Post post = postRepository.findById(id)
+        PostEntity post = postRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다: id=" + id));
 
         post.setPostTitle(dto.getPostTitle());
@@ -77,7 +77,7 @@ public class PostService {
         post.setPostImage(dto.getPostImage());
         post.setPostUpDate(java.time.LocalDateTime.now());
 
-        Post updated = postRepository.save(post);
+        PostEntity updated = postRepository.save(post);
 
         return PostDto.builder()
                 .postId(updated.getPostId())

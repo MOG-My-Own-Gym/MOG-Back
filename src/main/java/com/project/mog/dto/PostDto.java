@@ -17,8 +17,8 @@ public class PostDto {
     private LocalDateTime postUpDate;  // 수정 시각
 
 
-    public com.project.mog.entity.Post toEntity() {
-    return com.project.mog.entity.Post.builder()
+    public com.project.mog.entity.PostEntity toEntity() {
+    return com.project.mog.entity.PostEntity.builder()
             .userId(this.userId)
             .postTitle(this.postTitle)
             .postContent(this.postContent)

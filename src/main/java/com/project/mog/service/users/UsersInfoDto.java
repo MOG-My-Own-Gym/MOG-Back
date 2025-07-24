@@ -44,6 +44,7 @@ public class UsersInfoDto {
 		user.setUsersName(usersName);
 		user.setNickName(nickName);
 		user.setProfileImg(profileImg);
+		user.setPhoneNum(phoneNum);
 		user.setUpdateDate(LocalDateTime.now());
 		
 		if(biosDto!=null) {

@@ -62,8 +62,5 @@ public class UsersDetails implements UserDetails {
 		// 사용 안할시 항상 true 처리
 		return true;
 	}
-	public UsersEntity getUsersEntity() {
-	    return usersEntity;
-	}
 	
 }

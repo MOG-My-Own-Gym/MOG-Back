@@ -40,7 +40,7 @@ public class UsersEntity {
 	@Column(length = 10,nullable = false)
 	private String usersName;
 	
-	@Column(name = "NICKNAME",length= 100, nullable = false)
+	@Column(length= 100, nullable = false)
 	private String nickName;
 	
 	@Column(length = 100,nullable = false)
@@ -48,6 +48,9 @@ public class UsersEntity {
 	
 	@Column(length = 100,nullable = true)
 	private String profileImg;
+	
+	@Column(length=11,nullable=false)
+	private String phoneNum;
 	
 	@Column(nullable=false,updatable = false)
 	private LocalDateTime regDate;

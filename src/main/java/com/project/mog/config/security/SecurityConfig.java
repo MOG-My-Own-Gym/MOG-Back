@@ -52,15 +52,15 @@ public class SecurityConfig {
 				.authorizeHttpRequests(auth -> auth.requestMatchers(
 						"/api/v1/users/list",
 						"/api/v1/users/login",
+						"/api/v1/users/login/*",
 						"/api/v1/users/signup",
-						"/api/v1/users/*",
-						"/api/v1/posts/**",
+						"/api/v1/routine/**",
+						"/api/v1/users/**",
+						"/api/v1/users/email/**",
 						"/swagger-ui/*",
 						"/swagger-resources/**",
 						"/v3/api-docs/**",
-						"/error",
-						"/api/v1/posts/**" 
-						
+						"/error"
 						
 						).permitAll()
 				.anyRequest().authenticated())
@@ -115,7 +115,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:3000","https://mog-front-deploy-gu9r4y64o-oen0theras-projects.vercel.app/"));
+        config.setAllowedOrigins(List.of("http://localhost:3000","https://mog-front-deploy-dev-git-main-oen0theras-projects.vercel.app/"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);

@@ -35,7 +35,7 @@ public class UserAuthorizationAspect {
 			throw new IllegalArgumentException("유저 정보가 충분하지 않습니다");
 		}
 		UsersEntity targetUser = usersRepository.findById(userId).orElseThrow(()->new RuntimeException("수정할 사용자를 찾을 수 없습니다"));
-		UsersEntity currentUser = usersRepository.findByEmail(authEmail);
+		UsersEntity currentUser = usersRepository.findByEmail(authEmail).orElseThrow(()->new IllegalArgumentException("유효하지 않은 사용자입니다"));
 		
 		if(currentUser.getUsersId()!=userId) {
 			throw new AccessDeniedException("유저 권한이 없습니다");

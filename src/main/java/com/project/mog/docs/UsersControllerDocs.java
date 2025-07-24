@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import com.project.mog.controller.login.LoginRequest;
 import com.project.mog.controller.login.LoginResponse;
 import com.project.mog.service.users.UsersDto;
+import com.project.mog.service.users.UsersInfoDto;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -23,11 +24,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public interface UsersControllerDocs {
 	
 	@Operation(summary="전체 회원 조회",description="전체 회원 정보 조회 API")
-	public ResponseEntity<List<UsersDto>> getAllUsers();
+	public ResponseEntity<List<UsersInfoDto>> getAllUsers();
 	
 	@Operation(summary="단일 회원 조회 ", description="단일 회원 정보 조회 API")
 	@Parameter(description="usersId", name="usersId", required=true)
-	public ResponseEntity<UsersDto> getUser(@PathVariable Long usersId);
+	public ResponseEntity<UsersInfoDto> getUser(@PathVariable Long usersId);
 	
 	@Operation(summary="회원 가입", description="회원 가입 API")
 	public ResponseEntity<UsersDto> createUser(
@@ -57,31 +58,16 @@ public interface UsersControllerDocs {
 	@Operation(summary="회원 정보 수정", description="회원 정보 수정 API")
 	@Parameter(name="Authorization", hidden=true)
 	@Parameter(description="usersId", name="usersId", required=true)
-	public ResponseEntity<UsersDto> editUser(@Parameter(hidden=true) @RequestHeader("Authorization") String authHeader, @PathVariable Long usersId, @io.swagger.v3.oas.annotations.parameters.RequestBody(
+	public ResponseEntity<UsersInfoDto> editUser(@RequestHeader("Authorization") String authHeader, @PathVariable Long usersId, @io.swagger.v3.oas.annotations.parameters.RequestBody(
 			content = @Content(
 					schema = @Schema(implementation = UsersDto.class),
-					examples= @ExampleObject(value="{\r\n"
-							+ "    \"usersName\":\"테스트유저4\",\r\n"
-							+ "    \"email\":\"test3@test.com\",\r\n"
-							+ "    \"profileImg\":\"profileImg.png\",\r\n"
-							+ "    \"biosDto\":{\r\n"
-							+ "        \"gender\":0,\r\n"
-							+ "        \"age\":50,\r\n"
-							+ "        \"height\":180,\r\n"
-							+ "        \"weight\":90\r\n"
-							+ "    },\r\n"
-							+ "    \"authDto\":{\r\n"
-							+ "        \"password\":\"testuser3\"\r\n"
-							+ "    }\r\n"
-							+ "\r\n"
-							+ "\r\n"
-							+ "}")
+					examples= @ExampleObject(value="")
 					)
-	)@RequestBody UsersDto usersDto);
+	)@RequestBody UsersInfoDto usersInfoDto);
 	
 	@Operation(summary="회원 탈퇴", description="회원 탈퇴 API")
 	@Parameter(description="usersId", name="usersId", required=true)
-	public ResponseEntity<UsersDto> deleteUser(@Parameter(hidden=true) @RequestHeader("Authorization") String authHeader, @PathVariable Long usersId);
+	public ResponseEntity<UsersInfoDto> deleteUser(@Parameter(hidden=true) @RequestHeader("Authorization") String authHeader, @PathVariable Long usersId);
 	
 	@Operation(summary="로그인", description="로그인 API")
 	public ResponseEntity<LoginResponse> login(@io.swagger.v3.oas.annotations.parameters.RequestBody(

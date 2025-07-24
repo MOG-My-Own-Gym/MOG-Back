@@ -40,7 +40,6 @@ public class BiosDto {
 				.height(height)
 				.weight(weight)
 				.build();
-				
 	}
 	public static BiosDto toDto(BiosEntity bEntity) {
 		if (bEntity==null) return null;

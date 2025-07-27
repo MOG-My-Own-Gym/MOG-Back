@@ -5,6 +5,7 @@ import com.project.mog.repository.auth.AuthRepository;
 import com.project.mog.repository.like.LikeEntity; // import 변경
 import com.project.mog.repository.like.LikeRepository;
 import com.project.mog.repository.post.Post;
+import com.project.mog.repository.post.PostEntity;
 import com.project.mog.repository.post.PostRepository;
 import com.project.mog.service.like.LikeResponseDto;
 import jakarta.persistence.EntityNotFoundException;
@@ -23,7 +24,7 @@ public class LikeService {
 
     @Transactional
     public LikeResponseDto toggleLike(Long postId, Long userId) {
-        Post post = postRepository.findById(postId)
+        PostEntity post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 게시물을 찾을 수 없습니다. ID: " + postId));
         AuthEntity user = authRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다. ID: " + userId));

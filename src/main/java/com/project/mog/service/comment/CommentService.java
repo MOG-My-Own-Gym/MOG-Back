@@ -5,6 +5,7 @@ import com.project.mog.repository.auth.AuthRepository;
 import com.project.mog.repository.comment.CommentEntity;
 import com.project.mog.repository.comment.CommentRepository;
 import com.project.mog.repository.post.Post;
+import com.project.mog.repository.post.PostEntity;
 import com.project.mog.repository.post.PostRepository;
 import com.project.mog.service.comment.dto.CommentResponseDto;
 import com.project.mog.service.comment.dto.CommentSaveRequestDto;
@@ -26,7 +27,7 @@ public class CommentService {
 
     @Transactional
     public CommentResponseDto createComment(Long postId, Long userId, CommentSaveRequestDto requestDto) {
-        Post post = postRepository.findById(postId)
+        PostEntity post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 게시물을 찾을 수 없습니다. ID: " + postId));
         AuthEntity user = authRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다. ID: " + userId));

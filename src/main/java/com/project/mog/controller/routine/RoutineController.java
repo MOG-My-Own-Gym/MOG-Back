@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ import com.project.mog.service.routine.RoutineService;
 import com.project.mog.service.routine.SaveRoutineDto;
 import com.project.mog.service.users.UsersDto;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -55,6 +57,20 @@ public class RoutineController {
 		String authEmail = jwtUtil.extractUserEmail(token);
 		RoutineDto routine = routineService.createRoutine(authEmail,routineDto);
 		return ResponseEntity.status(HttpStatus.CREATED).body(routine);
+	}
+	@Transactional
+	@PutMapping("{setId}/update")
+	public ResponseEntity<RoutineDto> updateRoutine(@RequestHeader("Authorization") String authHeader,@PathVariable Long setId, @RequestBody RoutineDto routineDto){
+		String token = authHeader.replace("Bearer ", "");
+		String authEmail = jwtUtil.extractUserEmail(token);
+		RoutineDto routine = routineService.updateRoutine(authEmail,setId,routineDto);
+		return ResponseEntity.status(HttpStatus.CREATED).body(routine);
+	}
+	//루틴 상세 관련
+	@GetMapping("{setId}/save/{srId}")
+	public ResponseEntity<SaveRoutineDto> getSaveRoutine( @PathVariable Long setId, @PathVariable Long srId){
+		SaveRoutineDto saveRoutine = routineService.getSaveRoutine(setId,srId);
+		return ResponseEntity.status(HttpStatus.OK).body(saveRoutine);
 	}
 	
 	@PostMapping("{setId}/save")

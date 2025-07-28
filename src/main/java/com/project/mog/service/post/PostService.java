@@ -19,7 +19,7 @@ public class PostService {
 
     // 게시글 저장
     public PostDto create(String email,PostDto dto) {
-    	UsersEntity user = usersRepository.findByEmail(email);
+    	UsersEntity user = usersRepository.findByEmail(email).orElseThrow();
     	PostEntity post = dto.toEntity();
     	post.setUser(user);
         // 저장하고 영속화된 Entity 리턴
@@ -30,7 +30,7 @@ public class PostService {
 
     // 모든 게시글 조회
     public List<PostDto> listAll(String email) {
-    	UsersEntity user = usersRepository.findByEmail(email);
+    	UsersEntity user = usersRepository.findByEmail(email).orElseThrow();
     	List<PostEntity> post = postRepository.findAllOrderByRegDate(user.getUsersId());
         return post.stream().map(PostDto::toDto).collect(Collectors.toList());
     }

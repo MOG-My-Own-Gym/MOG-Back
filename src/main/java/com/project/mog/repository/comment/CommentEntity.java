@@ -2,6 +2,8 @@ package com.project.mog.repository.comment;
 
 import com.project.mog.repository.auth.AuthEntity;
 import com.project.mog.repository.post.Post;
+import com.project.mog.repository.post.PostEntity;
+
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -22,7 +24,7 @@ public class CommentEntity { // 클래스 이름 변경
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "postid", nullable = false)
-    private Post post;
+    private PostEntity post;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userid", referencedColumnName="authId", nullable = false)
@@ -36,7 +38,7 @@ public class CommentEntity { // 클래스 이름 변경
     private LocalDateTime createdAt;
 
     // 반환 타입을 CommentEntity로 변경
-    public static CommentEntity of(Post post, AuthEntity user, String content) {
+    public static CommentEntity of(PostEntity post, AuthEntity user, String content) {
         CommentEntity comment = new CommentEntity();
         comment.post = post;
         comment.user = user;

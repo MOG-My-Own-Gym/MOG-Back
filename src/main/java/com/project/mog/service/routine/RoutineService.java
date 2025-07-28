@@ -19,6 +19,7 @@ import com.project.mog.repository.routine.RoutineResultEntity;
 import com.project.mog.repository.routine.RoutineResultRepository;
 import com.project.mog.repository.routine.SaveRoutineEntity;
 import com.project.mog.repository.routine.SaveRoutineRepository;
+import com.project.mog.repository.routine.SaveRoutineSetEntity;
 import com.project.mog.repository.users.UsersEntity;
 import com.project.mog.repository.users.UsersRepository;
 import com.project.mog.service.users.UsersDto;
@@ -42,6 +43,13 @@ public class RoutineService {
 								.routineName(routineDto.getRoutineName())
 								.user(uEntity)
 								.build();
+		rEntity.setSaveRoutine(routineDto.getSaveRoutineDto().stream().map(srDto->{
+			SaveRoutineEntity srEntity = srDto.toEntity(rEntity);
+			srEntity.setSaveRoutineSet(srDto.getSet().stream().map(srs->{
+				return SaveRoutineSetEntity.builder().weight(srs.getWeight()).many(srs.getMany()).saveRoutine(srEntity).build();
+			}).toList());
+			return srEntity;
+			}).collect(Collectors.toList()));
 		return rEntity;
 	}
 	public RoutineEndTotalEntity toEntity(RoutineEndTotalDto retDto, Long setId) {
@@ -70,11 +78,66 @@ public class RoutineService {
 		return RoutineDto.toDto(routineEntity); 
 	}
 
-	public RoutineDto createRoutine(String authEmail,RoutineDto routineDto) {
+	public RoutineDto createRoutine(String authEmail, RoutineDto routineDto) {
 		UsersEntity uEntity = usersRepository.findByEmail(authEmail).orElseThrow(()->new IllegalArgumentException("유효하지 않은 사용자입니다"));
 		RoutineEntity routineEntity = routineRepository.save(toEntity(uEntity,routineDto));
 		return RoutineDto.toDto(routineEntity);
 	}
+	
+	public RoutineDto updateRoutine(String authEmail,Long setId, RoutineDto routineDto) {
+		UsersEntity uEntity = usersRepository.findByEmail(authEmail)
+			    .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 사용자입니다"));
+
+			RoutineEntity routineEntity = routineRepository.findById(routineDto.getSetId())
+			    .orElseThrow(() -> new IllegalArgumentException("루틴이 존재하지 않습니다"));
+
+			// 루틴 이름 업데이트
+			routineEntity.setRoutineName(routineDto.getRoutineName());
+
+			// 기존 연관관계 초기화 (선택적)
+			routineEntity.getSaveRoutine().clear();
+			
+			// 새로운 SaveRoutineEntity 리스트 생성
+			List<SaveRoutineEntity> saveRoutineEntities = routineDto.getSaveRoutineDto().stream()
+			    .map(saveRoutineDto -> {
+			        SaveRoutineEntity saveRoutineEntity = new SaveRoutineEntity();
+			        saveRoutineEntity.setSrName(saveRoutineDto.getSrName());
+			        saveRoutineEntity.setExId(saveRoutineDto.getExId());
+			        saveRoutineEntity.setReps(saveRoutineDto.getReps());
+			        saveRoutineEntity.setRoutine(routineEntity); // 연관관계 주입
+
+			        // 세트 매핑
+			        List<SaveRoutineSetEntity> sets = saveRoutineDto.getSet().stream()
+			            .map(setDto -> {
+			            	SaveRoutineSetEntity setEntity = new SaveRoutineSetEntity();
+			                setEntity.setWeight(setDto.getWeight());
+			                setEntity.setMany(setDto.getMany());
+			                setEntity.setSaveRoutine(saveRoutineEntity); // 연관관계 주입
+			                return setEntity;
+			            })
+			            .collect(Collectors.toList());
+
+			        saveRoutineEntity.setSaveRoutineSet(sets);// 연관관계 설정
+			        return saveRoutineEntity;
+			    })
+			    .collect(Collectors.toList());
+
+			// 루틴에 연결
+			routineEntity.getSaveRoutine().addAll(saveRoutineEntities);
+
+
+			routineRepository.save(routineEntity);
+			
+			return RoutineDto.toDto(routineEntity);
+
+	}
+	
+	public SaveRoutineDto getSaveRoutine(Long setId, Long srId) {
+		SaveRoutineEntity saveRoutineEntity = saveRoutineRepository.findBySetIdAndSrId(setId,srId);
+		
+		return SaveRoutineDto.toDto(saveRoutineEntity);
+	}
+
 	
 	public SaveRoutineDto createSaveRoutine(SaveRoutineDto saveRoutineDto, Long setId) {
 		RoutineEntity routineEntity = routineRepository.findById(setId).orElseThrow(()->new IllegalArgumentException("루틴을 찾을 수 없습니다"));
@@ -115,5 +178,6 @@ public class RoutineService {
 				
 		return routineEndTotalEntities.stream().map(RoutineEndTotalDto::toDto).collect(Collectors.toList());
 	}
-
+	
+	
 }

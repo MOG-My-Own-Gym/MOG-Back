@@ -24,9 +24,12 @@ import com.project.mog.controller.auth.PasswordUpdateRequest;
 import com.project.mog.controller.login.LoginRequest;
 import com.project.mog.controller.login.LoginResponse;
 import com.project.mog.controller.login.SocialLoginRequest;
+import com.project.mog.controller.mail.SendPasswordRequest;
 import com.project.mog.docs.UsersControllerDocs;
 import com.project.mog.repository.users.UsersEntity;
 import com.project.mog.security.jwt.JwtUtil;
+import com.project.mog.service.mail.MailDto;
+import com.project.mog.service.mail.MailService;
 import com.project.mog.service.users.UsersDto;
 import com.project.mog.service.users.UsersInfoDto;
 import com.project.mog.service.users.UsersService;
@@ -44,6 +47,7 @@ import lombok.RequiredArgsConstructor;
 public class UsersController implements UsersControllerDocs{
 	private final JwtUtil jwtUtil;
 	private final UsersService usersService;
+	private final MailService mailService;
 	
 	
 	@GetMapping("list")
@@ -152,5 +156,16 @@ public class UsersController implements UsersControllerDocs{
 		return ResponseEntity.status(HttpStatus.OK).body(usersDto);
 	}
 	
+	@PostMapping("send/password")
+	public ResponseEntity<String> sendPassword(@RequestBody SendPasswordRequest sendPasswordRequest) {
+		String email = sendPasswordRequest.getEmail();
+		String usersName = sendPasswordRequest.getUsersName();
+		UsersDto usersDto = usersService.getPassword(email);
+		String password = usersDto.getAuthDto().getPassword();
+		MailDto mail = mailService.createMail(password, usersName, email);
+		mailService.sendMail(mail);
+		
+		return ResponseEntity.status(HttpStatus.OK).body("비밀번호 찾기 이메일 전송 완료");
+	}
 	
 }

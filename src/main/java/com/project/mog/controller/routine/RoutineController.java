@@ -94,7 +94,7 @@ public class RoutineController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(routineEndTotal);
 	}
 	
-	@GetMapping("result") //이후 기간 추가해야함(모든 데이터 반환시 서버에 가해지는 부하 고려)
+	@PostMapping("result") //이후 기간 추가해야함(모든 데이터 반환시 서버에 가해지는 부하 고려)
 	public ResponseEntity<List<RoutineEndTotalDto>> getRoutineEndTotal(@RequestHeader("Authorization") String authHeader, @RequestBody(required = false) RoutineEndTotalRequest routineEndTotalRequest){
 		String token = authHeader.replace("Bearer ", "");
 		String authEmail = jwtUtil.extractUserEmail(token);

@@ -1,6 +1,7 @@
 package com.project.mog.controller.post;
 
 import com.project.mog.security.jwt.JwtUtil;
+import com.project.mog.service.comment.dto.CommentResponseDto;
 import com.project.mog.service.post.PostDto;
 import com.project.mog.service.post.PostService;
 
@@ -80,4 +81,5 @@ public class PostController {
             return ResponseEntity.status(500).body("이미지 업로드 실패");
         }
     }
+    
 }

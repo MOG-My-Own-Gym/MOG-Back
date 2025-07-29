@@ -30,7 +30,7 @@ spring:
   #Spring Data JPA 설정
     jpa:
       hibernate:
-        ddl-auto: create
+        ddl-auto: update
         naming:
           physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
       show-sql: true

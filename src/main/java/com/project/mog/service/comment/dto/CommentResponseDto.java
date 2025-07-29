@@ -11,12 +11,14 @@ public class CommentResponseDto {
     private final String userName;
     private final Long userId;
     private final LocalDateTime createdAt;
+    private final Long postId;
 
     public CommentResponseDto(CommentEntity comment) { 
         this.commentId = comment.getId();
         this.content = comment.getContent();
-        this.userName = comment.getUser().getUser().getUsersName();
-        this.userId = comment.getUser().getAuthId();
+        this.userName = comment.getUser().getUsersName();
+        this.userId = comment.getUser().getUsersId();
         this.createdAt = comment.getCreatedAt();
+        this.postId = comment.getPost().getPostId();
     }
 }

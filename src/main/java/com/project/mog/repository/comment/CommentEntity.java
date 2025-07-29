@@ -3,6 +3,7 @@ package com.project.mog.repository.comment;
 import com.project.mog.repository.auth.AuthEntity;
 import com.project.mog.repository.post.Post;
 import com.project.mog.repository.post.PostEntity;
+import com.project.mog.repository.users.UsersEntity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -27,8 +28,8 @@ public class CommentEntity { // 클래스 이름 변경
     private PostEntity post;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userid", referencedColumnName="authId", nullable = false)
-    private AuthEntity user;
+    @JoinColumn(name = "usersid", referencedColumnName="usersId", nullable = false)
+    private UsersEntity user;
 
     @Column(name = "commentcontent", nullable = false, length = 300)
     private String content;
@@ -38,11 +39,12 @@ public class CommentEntity { // 클래스 이름 변경
     private LocalDateTime createdAt;
 
     // 반환 타입을 CommentEntity로 변경
-    public static CommentEntity of(PostEntity post, AuthEntity user, String content) {
+    public static CommentEntity of(PostEntity post, UsersEntity user, String content) {
         CommentEntity comment = new CommentEntity();
         comment.post = post;
         comment.user = user;
         comment.content = content;
+        comment.createdAt = LocalDateTime.now();
         return comment;
     }
 }

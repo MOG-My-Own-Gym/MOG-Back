@@ -9,4 +9,7 @@ public interface SaveRoutineRepository extends JpaRepository<SaveRoutineEntity, 
 	@Query(nativeQuery = true,value = "SELECT * FROM SAVEROUTINE WHERE SETID=?1")
 	List<SaveRoutineEntity> findAllBySetId(Long setId);
 
+	@Query(nativeQuery = true,value = "SELECT * FROM SAVEROUTINE WHERE SETID=?1 AND SRID=?2")
+	SaveRoutineEntity findBySetIdAndSrId(Long setId, Long srId);
+
 }

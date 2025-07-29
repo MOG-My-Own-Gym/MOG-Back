@@ -1,7 +1,10 @@
 package com.project.mog.repository.routine;
 
+import java.util.List;
+
 import com.project.mog.repository.users.UsersEntity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -35,15 +39,15 @@ public class SaveRoutineEntity {
 	private long exId;
 	@Column(length=200)
 	private String srName;
-	@Column(length=19)
-	private long setNumber;
+	
 	@Column(length=19)
 	private long reps;
-	@Column(length=3)
-	private long weight;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "setId", referencedColumnName = "setId", nullable = true)
 	private RoutineEntity routine;
+	
+	@OneToMany(mappedBy = "saveRoutine",fetch = FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+	private List<SaveRoutineSetEntity> saveRoutineSet;
 	
 }

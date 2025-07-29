@@ -9,5 +9,8 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<CommentEntity, Long> { 
     
 	@Query(nativeQuery = true,value ="SELECT * FROM COMMENTS WHERE POSTID=?1")
-    List<CommentEntity> findByPostIdOrderByCreatedAtDesc(Long postId); 
+    List<CommentEntity> findByPostIdOrderByCreatedAtDesc(Long postId);
+
+	@Query(nativeQuery = true,value ="SELECT * FROM COMMENTS WHERE USERSID=?1 ORDER BY COMMENTUPDATE DESC")
+	List<CommentEntity> findByUserId(long usersId); 
 }

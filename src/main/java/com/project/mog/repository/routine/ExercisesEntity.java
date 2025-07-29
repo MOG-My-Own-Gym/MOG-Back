@@ -1,23 +1,18 @@
 package com.project.mog.repository.routine;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
-import com.project.mog.repository.auth.AuthEntity;
-import com.project.mog.repository.bios.BiosEntity;
 import com.project.mog.repository.users.UsersEntity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -27,26 +22,37 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="routinemain")
+@Table(name="exercises")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RoutineEntity {
+public class ExercisesEntity {
 	@Id
 	@Column(length=19,nullable=false)
-	@SequenceGenerator(name = "SEQ_ROUTINE_GENERATOR",sequenceName = "SEQ_ROUTINE",allocationSize = 1,initialValue = 1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator ="SEQ_ROUTINE_GENERATOR" )	
-	private long setId;
-	
+	@SequenceGenerator(name = "SEQ_EXERCISES_GENERATOR",sequenceName = "SEQ_EXERCISES",allocationSize = 1,initialValue = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator ="SEQ_EXERCISES_GENERATOR" )	
+	private Long exId;
 	@Column(length=200)
-	private String routineName;
+	private String exName;
+	@Column(length=200)
+	private String exCategory;
+	@Column(length=200)
+	private String exEquipment;
+	@Column(length=200)
+	private String exForce;
+	@Column(length=200)
+	private String exLevel;
+	@Column(length=200)
+	private String exMechanic;
+	@Column(length=2000)
+	private String[] exInstructions;
+	@Column(length=200)
+	private String[] exPrimaryMuscles;
+	@Column(length=200)
+	private String[] exSecondaryMuscles;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "usersId", referencedColumnName = "usersId", nullable = false)
-	private UsersEntity user;
 	
-	@OneToMany(mappedBy = "routine",fetch = FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
-	private List<SaveRoutineEntity> saveRoutine;
+	
 }

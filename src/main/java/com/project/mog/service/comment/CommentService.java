@@ -5,7 +5,10 @@ import com.project.mog.repository.auth.AuthRepository;
 import com.project.mog.repository.comment.CommentEntity;
 import com.project.mog.repository.comment.CommentRepository;
 import com.project.mog.repository.post.Post;
+import com.project.mog.repository.post.PostEntity;
 import com.project.mog.repository.post.PostRepository;
+import com.project.mog.repository.users.UsersEntity;
+import com.project.mog.repository.users.UsersRepository;
 import com.project.mog.service.comment.dto.CommentResponseDto;
 import com.project.mog.service.comment.dto.CommentSaveRequestDto;
 import jakarta.persistence.EntityNotFoundException;
@@ -23,12 +26,14 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
     private final AuthRepository authRepository;
+    private final UsersRepository usersRepository;
 
     @Transactional
     public CommentResponseDto createComment(Long postId, Long userId, CommentSaveRequestDto requestDto) {
-        Post post = postRepository.findById(postId)
+        PostEntity post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 게시물을 찾을 수 없습니다. ID: " + postId));
-        AuthEntity user = authRepository.findById(userId)
+        System.out.println("USERID:"+userId);
+        UsersEntity user = usersRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("사용자를 찾을 수 없습니다. ID: " + userId));
 
         CommentEntity comment = CommentEntity.of(post, user, requestDto.getContent());
@@ -43,15 +48,24 @@ public class CommentService {
                 .map(CommentResponseDto::new)
                 .collect(Collectors.toList());
     }
-
+    
+    @Transactional(readOnly = true)
+    public List<CommentResponseDto> getAllComments(String authEmail) {
+    	UsersEntity user = usersRepository.findByEmail(authEmail).orElseThrow();
+        List<CommentEntity> comments = commentRepository.findByUserId(user.getUsersId());
+        return comments.stream().map(CommentResponseDto::new).collect(Collectors.toList());
+	}
+    
     @Transactional
     public void deleteComment(Long commentId, Long userId) {
         CommentEntity comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new EntityNotFoundException("댓글을 찾을 수 없습니다. ID: " + commentId));
 
-        if (comment.getUser().getAuthId() != userId) {
+        if (comment.getUser().getUsersId() != userId) {
             throw new SecurityException("댓글을 삭제할 권한이 없습니다.");
         }
         commentRepository.delete(comment);
     }
+
+	
 }

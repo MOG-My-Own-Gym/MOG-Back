@@ -2,6 +2,8 @@ package com.project.mog.repository.like;
 
 import com.project.mog.repository.auth.AuthEntity;
 import com.project.mog.repository.post.Post;
+import com.project.mog.repository.post.PostEntity;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,9 +24,9 @@ public class LikeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "postid", nullable = false)
-    private Post post;
+    private PostEntity post;
 
-    public LikeEntity(AuthEntity user, Post post) {
+    public LikeEntity(AuthEntity user, PostEntity post) {
         this.user = user;
         this.post = post;
     }

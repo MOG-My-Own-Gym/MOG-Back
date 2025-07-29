@@ -124,6 +124,10 @@ public class UsersService {
 			
 		}
 
+		public UsersDto getPassword(String authEmail) {
+			UsersEntity usersEntity = usersRepository.findByEmail(authEmail).orElseThrow(()->new IllegalArgumentException("사용자를 찾을 수 없습니다"));
+			return UsersDto.toDto(usersEntity);
+		}
 
 		
 		public UsersDto editPassword(String authEmail, String originPassword, String newPassword) {

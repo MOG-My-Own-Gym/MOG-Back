@@ -1,5 +1,6 @@
 package com.project.mog.service.routine;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.mog.repository.routine.RoutineEndDetailEntity;
 import com.project.mog.repository.routine.RoutineEndTotalEntity;
 
@@ -20,6 +21,7 @@ public class RoutineEndDetailDto {
 	private long setNumber;
 	private long reps;
 	private long weight;
+	@JsonIgnore
 	private RoutineEndTotalEntity routineEndTotalEntity;
 	
 	public RoutineEndDetailEntity toEntity(RoutineEndTotalEntity retEntity) {

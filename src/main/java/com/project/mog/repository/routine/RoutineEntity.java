@@ -47,6 +47,6 @@ public class RoutineEntity {
 	@JoinColumn(name = "usersId", referencedColumnName = "usersId", nullable = false)
 	private UsersEntity user;
 	
-	@OneToMany(mappedBy = "routine",fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "routine",fetch = FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	private List<SaveRoutineEntity> saveRoutine;
 }

@@ -49,6 +49,9 @@ public class UsersEntity {
 	@Column(length = 100,nullable = true)
 	private String profileImg;
 	
+	@Column(length=11,nullable=false)
+	private String phoneNum;
+	
 	@Column(nullable=false,updatable = false)
 	private LocalDateTime regDate;
 	@Column(nullable=false)

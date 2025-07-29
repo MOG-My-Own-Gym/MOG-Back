@@ -52,9 +52,12 @@ public class SecurityConfig {
 				.authorizeHttpRequests(auth -> auth.requestMatchers(
 						"/api/v1/users/list",
 						"/api/v1/users/login",
+						"/api/v1/users/login/*",
 						"/api/v1/users/signup",
 						"/api/v1/routine/**",
-						"/api/v1/users/*",
+						"/api/v1/users/**",
+						"/api/v1/users/email/**",
+						"/api/v1/users/send/*",
 						"/swagger-ui/*",
 						"/swagger-resources/**",
 						"/v3/api-docs/**",

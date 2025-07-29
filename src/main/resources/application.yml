@@ -30,13 +30,24 @@ spring:
   #Spring Data JPA 설정
     jpa:
       hibernate:
-        ddl-auto: create
+        ddl-auto: update
         naming:
           physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
       show-sql: true
       properties:
         hibernate:
           format_sql: true
+
+    mail:
+      host: smtp.gmail.com
+      port: 587
+      username: mogmyowngym@gmail.com
+      password: bsbv jxtd keou wxvy
+      properties:
+        mail.smtp.auth: true
+        mail.smtp.starttls.enable: true
+        mail.smtp.ssl.protocols: TLSv1.2
       
 jwttoken:
   secret-key: Nf/vIRqt0/bKThqJ6tOy2M9tqJX+rJxGG9HrZgsBrT4=
+

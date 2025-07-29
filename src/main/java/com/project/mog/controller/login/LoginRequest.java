@@ -1,11 +1,13 @@
 package com.project.mog.controller.login;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
 public class LoginRequest {
 	@Schema(description = "email",example="test@test.com")
 	private String email;

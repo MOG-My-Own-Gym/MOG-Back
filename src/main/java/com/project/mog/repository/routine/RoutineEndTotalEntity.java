@@ -53,6 +53,6 @@ public class RoutineEndTotalEntity {
 	
 	@OneToOne(fetch = FetchType.LAZY)
 
-	@JoinColumn(name="rrId",referencedColumnName="rrId",nullable=false)
+	@JoinColumn(name="rrId",referencedColumnName="rrId",nullable=true)
 	private RoutineResultEntity routineResult;
 }

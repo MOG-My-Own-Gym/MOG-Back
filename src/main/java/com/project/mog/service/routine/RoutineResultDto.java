@@ -43,6 +43,7 @@ public class RoutineResultDto {
 								.muscle(rrEntity.getMuscle())
 								.kcal(rrEntity.getKcal())
 								.reSet(rrEntity.getReSet())
+								.setNum(rrEntity.getSetNum())
 								.volum(rrEntity.getVolum())
 								.rouTime(rrEntity.getRouTime())
 								.exVolum(rrEntity.getExVolum())

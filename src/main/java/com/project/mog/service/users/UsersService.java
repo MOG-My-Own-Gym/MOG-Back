@@ -108,6 +108,7 @@ public class UsersService {
 													.nickName(kakaoUser.getProperties().getNickname())
 													.bios(null)
 													.auth(newKakaoAuth)
+													.phoneNum(kakaoUser.getId().toString())
 													.build();
 					return createUser(UsersDto.toDto(newKakaoUser));
 				}

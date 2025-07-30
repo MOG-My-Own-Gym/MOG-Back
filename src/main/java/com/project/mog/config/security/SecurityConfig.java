@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
@@ -49,7 +50,9 @@ public class SecurityConfig {
 				.cors(Customizer.withDefaults())
 				.csrf(csrf -> csrf.disable())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.authorizeHttpRequests(auth -> auth.requestMatchers(
+				.authorizeHttpRequests(auth -> auth
+				.requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
+				.requestMatchers(
 						"/api/v1/users/list",
 						"/api/v1/users/login",
 						"/api/v1/users/login/*",
@@ -116,7 +119,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:3000","https://mog-front-deploy-dev-git-main-oen0theras-projects.vercel.app/"));
+        config.setAllowedOrigins(List.of("http://localhost:3000","https://myowngym.kro.kr","https://mog-front-deploy-dev-git-main-oen0theras-projects.vercel.app/"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);

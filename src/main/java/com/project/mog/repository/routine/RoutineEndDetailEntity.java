@@ -34,7 +34,7 @@ public class RoutineEndDetailEntity {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator ="SEQ_RED_GENERATOR" )	
 	private long redId;
 	
-	@Column(length=19)
+	@Column(length=100)
 	private String srName;
 	
 	@Column(length=19)

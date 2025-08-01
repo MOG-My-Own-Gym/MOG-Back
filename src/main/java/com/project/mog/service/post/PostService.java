@@ -61,5 +61,10 @@ public class PostService {
         
         return PostDto.toDto(post);
     }
+
+	public List<PostDto> totalListAll() {
+		List<PostEntity> posts = postRepository.findAll();
+		return posts.stream().map(PostDto::toDto).toList();
+	}
     
 }

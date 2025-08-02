@@ -3,7 +3,13 @@ package com.project.mog.repository.post;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+import com.project.mog.repository.comment.CommentEntity;
 import com.project.mog.repository.users.UsersEntity;
 
 @Entity                         
@@ -23,13 +29,19 @@ public class PostEntity {
 
     @Column(length = 2000, nullable = false)
     private String postContent;  // 글 내용
-
+    
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @Column(name = "post_image", columnDefinition = "CLOB")
     private String postImage;    // 이미지 URL (nullable)
 
     private LocalDateTime postRegDate; // 등록 시각
     private LocalDateTime postUpDate;  // 수정 시각
     
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usersId", referencedColumnName = "usersId", nullable = true)
 	private UsersEntity user;
+    
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<CommentEntity> comments = new ArrayList<>();
 }

@@ -12,6 +12,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -46,7 +47,8 @@ public class UsersEntity {
 	@Column(length = 100,nullable = false)
 	private String email;
 	
-	@Column(length = 100,nullable = true)
+	@Lob
+	@Column(nullable = false)
 	private String profileImg;
 	
 	@Column(length=11,nullable=false)

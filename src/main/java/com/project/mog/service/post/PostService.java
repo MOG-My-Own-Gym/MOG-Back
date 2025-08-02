@@ -58,7 +58,7 @@ public class PostService {
     //게시글 삭제
     public PostDto delete(Long id) {
     	PostEntity post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다"));;
-        
+    	postRepository.delete(post);
         return PostDto.toDto(post);
     }
 

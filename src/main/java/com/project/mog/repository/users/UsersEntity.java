@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import com.project.mog.repository.auth.AuthEntity;
 import com.project.mog.repository.bios.BiosEntity;
 
+import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -48,7 +49,8 @@ public class UsersEntity {
 	private String email;
 	
 	@Lob
-	@Column(nullable = false)
+    @Basic(fetch = FetchType.LAZY)
+    @Column(columnDefinition = "CLOB")
 	private String profileImg;
 	
 	@Column(length=11,nullable=false)

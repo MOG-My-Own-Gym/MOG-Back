@@ -2,6 +2,8 @@ package com.project.mog.repository.post;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.sql.Clob;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +34,7 @@ public class PostEntity {
     
     @Lob
     @Basic(fetch = FetchType.LAZY)
-    @Column(name = "post_image", columnDefinition = "CLOB")
+    @Column(columnDefinition = "CLOB")
     private String postImage;    // 이미지 URL (nullable)
 
     private LocalDateTime postRegDate; // 등록 시각

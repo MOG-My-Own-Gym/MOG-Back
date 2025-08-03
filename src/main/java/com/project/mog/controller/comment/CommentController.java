@@ -30,16 +30,18 @@ public class CommentController {
     }
 
     @PostMapping("/posts/{postId}/comments")
-    public ResponseEntity<CommentResponseDto> addComment(@PathVariable Long postId, @RequestBody CommentSaveRequestDto requestDto) {
-        Long currentUserId = 1L; 
-        CommentResponseDto newComment = commentService.createComment(postId, currentUserId, requestDto);
+    public ResponseEntity<CommentResponseDto> addComment(@RequestHeader("Authorization") String authHeader, @PathVariable Long postId, @RequestBody CommentSaveRequestDto requestDto) {
+    	String token = authHeader.replace("Bearer ", "");
+		String authEmail = jwtUtil.extractUserEmail(token);
+        CommentResponseDto newComment = commentService.createComment(postId, authEmail, requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(newComment);
     }
 
     @DeleteMapping("/posts/{postId}/comments/{commentId}")
-    public ResponseEntity<Void> removeComment(@PathVariable Long postId, @PathVariable Long commentId) {
-        Long currentUserId = 1L; 
-        commentService.deleteComment(commentId, currentUserId);
+    public ResponseEntity<Void> removeComment(@RequestHeader("Authorization") String authHeader,@PathVariable Long postId, @PathVariable Long commentId) {
+    	String token = authHeader.replace("Bearer ", "");
+		String authEmail = jwtUtil.extractUserEmail(token); 
+        commentService.deleteComment(commentId, authEmail);
         return ResponseEntity.noContent().build();
     }
 }

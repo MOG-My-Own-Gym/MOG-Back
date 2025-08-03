@@ -31,7 +31,7 @@ public class PostController {
         return ResponseEntity.ok(created);
     }
 
-    // 2) 게시글 목록 조회
+    // 2) 회원 게시글 목록 조회 
     @GetMapping
     public ResponseEntity<List<PostDto>> list(@RequestHeader("Authorization") String authHeader) {
     	String token = authHeader.replace("Bearer ", "");
@@ -46,21 +46,28 @@ public class PostController {
         return ResponseEntity.ok(updated);
     }
 
-    // 4) 게시글 단건 조회
+    // 4) 회원 게시글 단건 조회
     @GetMapping("/{id}")
     public ResponseEntity<PostDto> getPost(@PathVariable Long id) {
         PostDto post = postService.getById(id);
         return ResponseEntity.ok(post);
     }
+    
+    //5) 게시글 전체 조회 (모든 게시글)
+    @GetMapping("/list")
+    public ResponseEntity<List<PostDto>> getTotalList() {
+        return ResponseEntity.ok(postService.totalListAll());
+    }
 
-    // 5) 게시글 삭제
+
+    // 6) 게시글 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<PostDto> deletePost(@PathVariable Long id) {
         PostDto post = postService.delete(id);
         return ResponseEntity.ok(post); 
     }
 
-    // 6) 이미지 업로드 API
+    // 7) 이미지 업로드 API
     @PostMapping("/upload")
     public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
         try {

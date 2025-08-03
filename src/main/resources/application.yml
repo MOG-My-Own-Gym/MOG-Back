@@ -30,13 +30,17 @@ spring:
   #Spring Data JPA 설정
     jpa:
       hibernate:
-        ddl-auto: update
+        dialect: org.hibernate.dialect.Oracle12cDialect
+        ddl-auto: create
         naming:
           physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
       show-sql: true
       properties:
         hibernate:
           format_sql: true
+          jdbc:
+            lob:
+              non_contextual_creation: true
 
     mail:
       host: smtp.gmail.com

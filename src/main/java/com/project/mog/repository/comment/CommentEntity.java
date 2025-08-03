@@ -1,7 +1,6 @@
 package com.project.mog.repository.comment;
 
 import com.project.mog.repository.auth.AuthEntity;
-import com.project.mog.repository.post.Post;
 import com.project.mog.repository.post.PostEntity;
 import com.project.mog.repository.users.UsersEntity;
 

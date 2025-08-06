@@ -15,5 +15,7 @@ public interface RoutineRepository extends JpaRepository<RoutineEntity, Long>{
 	@Query(nativeQuery=true,value="SELECT * FROM routinemain WHERE usersid =?1 AND setid=?2")
 	public Optional<RoutineEntity> findByUsersIdAndSetId(Long usersId, Long setId);
 
+	@Query(nativeQuery=true,value="SELECT * FROM routinemain WHERE usersid =?1 AND setid=?2")
+	public Optional<RoutineEntity> findByUsersIdAndRoutineName(Long usersId, Long setId);
 	
 }

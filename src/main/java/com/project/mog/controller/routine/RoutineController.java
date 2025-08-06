@@ -66,6 +66,14 @@ public class RoutineController {
 		RoutineDto routine = routineService.updateRoutine(authEmail,setId,routineDto);
 		return ResponseEntity.status(HttpStatus.CREATED).body(routine);
 	}
+	@Transactional
+	@DeleteMapping("{setId}/delete") 
+	public ResponseEntity<RoutineDto> updateRoutine(@RequestHeader("Authorization") String authHeader,@PathVariable Long setId){
+		String token = authHeader.replace("Bearer ", "");
+		String authEmail = jwtUtil.extractUserEmail(token);
+		RoutineDto routine = routineService.deleteRoutine(authEmail,setId);
+		return ResponseEntity.status(HttpStatus.OK).body(routine);
+	}
 	//루틴 상세 관련
 	@GetMapping("{setId}/save/{srId}")
 	public ResponseEntity<SaveRoutineDto> getSaveRoutine( @PathVariable Long setId, @PathVariable Long srId){

@@ -11,7 +11,7 @@ public interface RoutineEndTotalRepository extends JpaRepository<RoutineEndTotal
 	@Query(nativeQuery=true, value="SELECT * FROM ROUTINEENDTOTAL WHERE SETID=?1")
 	List<RoutineEndTotalEntity> findAllBySetId(long setId);
 	
-	@Query(nativeQuery=true, value="SELECT * FROM ROUTINEENDTOTAL WHERE SETID=?1 AND TSTART<=?3 AND TEND>=?2")
+	@Query(nativeQuery=true, value="SELECT * FROM ROUTINEENDTOTAL WHERE SETID=?1 AND TSTART<=?3 AND TEND>=?2 ORDER BY TEND")
 	List<RoutineEndTotalEntity> findAllBySetIdAndDateBetween(long setId,LocalDateTime startDate, LocalDateTime endDate);
 
 }

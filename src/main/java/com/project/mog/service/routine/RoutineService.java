@@ -178,6 +178,12 @@ public class RoutineService {
 				
 		return routineEndTotalEntities.stream().map(RoutineEndTotalDto::toDto).collect(Collectors.toList());
 	}
+	public RoutineDto deleteRoutine(String authEmail, Long setId) {
+		UsersEntity userEntity = usersRepository.findByEmail(authEmail).orElseThrow(()->new IllegalArgumentException("유효하지 않은 사용자입니다"));
+		RoutineEntity routineEntity = routineRepository.findByUsersIdAndSetId(userEntity.getUsersId(),setId).orElseThrow(()-> new IllegalArgumentException("루틴을 찾을 수 없습니다"));
+		routineRepository.delete(routineEntity);
+		return RoutineDto.toDto(routineEntity);
+	}
 	
 	
 }

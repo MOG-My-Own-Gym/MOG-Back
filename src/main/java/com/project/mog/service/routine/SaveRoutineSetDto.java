@@ -23,34 +23,21 @@ public class SaveRoutineSetDto {
 	private long weight;
 	private long many;
 	
-	public SaveRoutineSetEntity toEntity() {
+	public SaveRoutineSetEntity toEntity(SaveRoutineEntity srEntity) {
 		return SaveRoutineSetEntity.builder()
 				.weight(weight)
 				.many(many)
+				.saveRoutine(srEntity)
 				.build();
 	}
 	
 	public static SaveRoutineSetDto toDto(SaveRoutineSetEntity saveRoutineSetEntity) {
 		if(saveRoutineSetEntity==null) return null;
 		return SaveRoutineSetDto.builder()
+				.srsId(saveRoutineSetEntity.getSrsId())
 				.weight(saveRoutineSetEntity.getWeight())
 				.many(saveRoutineSetEntity.getMany())
 				.build();
-	}
-	
-	public static List<SaveRoutineSetDto> toDtoList(List<SaveRoutineSetEntity> entities) {
-	    if (entities == null) return Collections.emptyList();
-
-	    List<SaveRoutineSetDto> result = new ArrayList<>();
-	    for (int i = 0; i < entities.size(); i++) {
-	        SaveRoutineSetEntity e = entities.get(i);
-	        result.add(SaveRoutineSetDto.builder()
-	            .srsId(i + 1) // 순서 기반 ID 부여
-	            .weight(e.getWeight())
-	            .many(e.getMany())
-	            .build());
-	    }
-	    return result;
 	}
 
 }

@@ -27,13 +27,16 @@ public class SaveRoutineDto {
 	private List<SaveRoutineSetDto> set;
 	
 	public SaveRoutineEntity toEntity(RoutineEntity rEntity) {
-		return SaveRoutineEntity.builder()
+		SaveRoutineEntity srEntity = SaveRoutineEntity.builder()
 				.exId(exId)
 				.srName(srName)
 				.reps(reps)
-				.saveRoutineSet(set.stream().map(srs->srs.toEntity()).toList())
 				.routine(rEntity)
 				.build();
+		List<SaveRoutineSetEntity> saveRoutineSets = set.stream().map(srs->srs.toEntity(srEntity)).toList();
+		srEntity.setSaveRoutineSet(saveRoutineSets);
+		
+		return srEntity;
 	}
 	
 	
@@ -45,7 +48,7 @@ public class SaveRoutineDto {
 	        .srId(srEntity.getSrId())
 	        .exId(srEntity.getExId())
 	        .srName(srEntity.getSrName())
-	        .set(SaveRoutineSetDto.toDtoList(srEntity.getSaveRoutineSet())) // 🔥 리스트 순서대로 변환
+	        .set(srEntity.getSaveRoutineSet().stream().map(srs->SaveRoutineSetDto.toDto(srs)).toList())
 	        .reps(srEntity.getReps())
 	        .setId(srEntity.getRoutine().getSetId())
 	        .build();

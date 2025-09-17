@@ -3,6 +3,7 @@ package com.project.mog.controller.healthConnect;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,9 +39,15 @@ public class HealthConnectController {
 	}
 	
 	@GetMapping("/{usersId}")
-	public ResponseEntity<List<HealthConnectDto>> getHealthConnectDataByEmail(@PathVariable Long usersId){
+	public ResponseEntity<List<HealthConnectDto>> getHealthConnectDataByUsersId(@PathVariable Long usersId){
 		List<HealthConnectDto> healthDataList=healthConnectService.getHealthConnectData(usersId);
 		return ResponseEntity.ok(healthDataList);
+	}
+	
+	@DeleteMapping("/{usersId}")
+	public ResponseEntity<HealthConnectResponseDto> deleteHealthConnectData(@PathVariable Long usersId){
+		healthConnectService.deleteHealthConnectDataByUsersId(usersId);
+		return ResponseEntity.ok(new HealthConnectResponseDto("해당유저의 모든 헬스커넥트 데이터가 성공적으로 삭제되었습니다"));
 	}
 
 }

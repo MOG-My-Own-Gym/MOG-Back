@@ -32,6 +32,22 @@ public class HealthConnectEntity {
 	@OneToMany(mappedBy = "healthConnect", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<HeartRateDataEntity> heartRateData = new ArrayList<>();
 	
+	public void addStepData(List<StepDataEntity> steps) {
+		this.stepData.clear();
+		for (StepDataEntity step : steps) {
+			step.setHealthConnect(this);
+			this.stepData.add(step);
+		}
+	}
+	
+	public void addHeartRateData(List<HeartRateDataEntity> heartRates) {
+		this.heartRateData.clear();
+		for (HeartRateDataEntity hr : heartRates) {
+			hr.setHealthConnect(this);
+			this.heartRateData.add(hr);
+		}
+	}
+	
 	private double caloriesBurnedData;
 	private double distanceWalked;
 	private double activeCaloriesBurned;
@@ -55,22 +71,6 @@ public class HealthConnectEntity {
 		this.deepSleepMinutes=deepSleepMinutes;
 		this.remSleepMinutes=remSleepMinutes;
 		this.lightSleepMinutes=lightSleepMinutes;
-	}
-	
-	public void addStepData(List<StepDataEntity> steps) {
-		this.stepData.clear();
-		this.stepData.addAll(steps);
-		steps.forEach(step -> {
-			step.setHealthConnect(this);
-		});
-	}
-	
-	public void addHeartRateData(List<HeartRateDataEntity> heartRates) {
-		this.heartRateData.clear();
-		this.heartRateData.addAll(heartRates);
-		heartRates.forEach(hr->{
-			hr.setHealthConnect(this);
-		});
 	}
 	
 }

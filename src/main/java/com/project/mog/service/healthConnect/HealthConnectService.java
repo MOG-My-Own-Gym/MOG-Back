@@ -39,19 +39,22 @@ public class HealthConnectService {
 		healthConnectEntity.setLightSleepMinutes(heDto.getLightSleepMinutes());
 		
 		List<StepDataEntity> stepData = Optional.ofNullable(heDto.getStepData())
-				.orElse(List.of())
-				.stream()
-				.map(step -> new StepDataEntity(step, healthConnectEntity))
-				.collect(Collectors.toList());
+	            .orElse(List.of())
+	            .stream()
+	            .map(step -> new StepDataEntity(step, healthConnectEntity))
+	            .collect(Collectors.toList());
+	    healthConnectEntity.setStepData(stepData);
 		
-		List<HeartRateDataEntity> heartRates = Optional.ofNullable(heDto.getHeartRateData())
-				.orElse(List.of())
-				.stream()
-				.map(hrDto -> new HeartRateDataEntity(hrDto.getBpm(), hrDto.getTime(),healthConnectEntity))
-				.collect(Collectors.toList());
+	    List<HeartRateDataEntity> heartRates = Optional.ofNullable(heDto.getHeartRateData())
+	            .orElse(List.of())
+	            .stream()
+	            .map(hrDto -> new HeartRateDataEntity(hrDto.getBpm(), hrDto.getTime(), healthConnectEntity))
+	            .collect(Collectors.toList());
+	    healthConnectEntity.setHeartRateData(heartRates);
 		
 		healthConnectEntity.addStepData(stepData);
-		healthConnectEntity.addHeartRateData(heartRates);
+		healthConnectEntity.addHeartRateData(heartRates);	
+		
 		healthConnectRepository.save(healthConnectEntity);
 		
 		return new HealthConnectResponseDto("헬스커넥트 데이터를 성공적으로 수신 및 저장하였습니다.");
@@ -66,6 +69,14 @@ public class HealthConnectService {
 				.map(this::convertToDto)
 				.collect(Collectors.toList());
 	}
+	
+	
+	@Transactional
+	public void deleteHealthConnectDataByUsersId(Long usersId) {
+		List<HealthConnectEntity> entities = healthConnectRepository.findByUser_usersId(usersId);
+		healthConnectRepository.deleteAll(entities);
+	}
+	
 	
 	private HealthConnectDto convertToDto(HealthConnectEntity entity) {
 		List<Integer> stepData = entity.getStepData().stream()
